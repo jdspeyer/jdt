@@ -1,0 +1,231 @@
+import 'package:flutter/material.dart';
+import 'package:jdt/database/themebox.dart';
+
+class ModuleTheme {
+  ModuleTheme({
+    /// General Theme Information
+    required this.name,
+    required this.id,
+    required this.icon,
+    required this.brightness,
+
+    /// Font Sizes
+    this.titleTextFontSize = 30.0,
+    this.subtitleTextFontSize = 12.0,
+    this.textFontSize = 14.0,
+    this.buttonTextFontSize = 14.0,
+
+    /// Border Radius
+    this.cardBorderRadius = 0.0,
+    this.inputBorderRadius = 0.0,
+    this.navbarBorderRadius = 0.0,
+    this.buttonBorderRadius = 0.0,
+
+    /// Padding
+    this.innerHorizontalPadding = 0.0,
+    this.innerVerticalPadding = 0.0,
+    this.outerHorizontalPadding = 0.0,
+    this.outerVerticalPadding = 0.0,
+
+    /// Background Colors
+    this.textFieldBackgroundColor = Colors.grey,
+    this.cardBackgroundColor = Colors.grey,
+    this.overlayBackgroundColor = Colors.white,
+    this.backgroundColor = Colors.white,
+
+    /// Forground Colors (Texts, icons, etc)
+    this.highlightColor = Colors.lightBlue,
+    this.overlayForgroundColor = Colors.black,
+    this.iconColor = Colors.red,
+    this.titleTextColor = Colors.black,
+    this.subtitleTextColor = Colors.grey,
+    this.textColor = Colors.black,
+    this.buttonTextColor = Colors.white,
+    this.errorColor = Colors.red,
+    this.accentColor = Colors.blue,
+  });
+  String id;
+  String name;
+  IconData icon;
+  Brightness brightness;
+
+  /* ------------------------------ Border Radius ----------------------------- */
+  /// The border radius used to round the edges of cards.
+  double cardBorderRadius;
+
+  /// The border radius used for input fields.
+  double inputBorderRadius;
+
+  /// The border radius used for the navbar.
+  double navbarBorderRadius;
+
+  /// The border radius used for buttons
+  double buttonBorderRadius;
+
+  /* --------------------------------- Colors --------------------------------- */
+  /// The background color of pages.
+  Color backgroundColor;
+
+  /// The color of cards throughout the application.
+  Color cardBackgroundColor;
+
+  /// The background color of text fields throughout the application.
+  Color textFieldBackgroundColor;
+
+  /// The color of text elements within the application (general text elements).
+  Color textColor;
+
+  /// The color of titles (text elements -- this should contrast well with the background color && card color).
+  Color titleTextColor;
+
+  /// The color of subtitle elements throughout the application.
+  Color subtitleTextColor;
+
+  /// The color of buttons throughout the application.
+  Color buttonTextColor;
+
+  /// The color which occurs on hover and selection of elements.
+  Color overlayBackgroundColor;
+
+  /// The color which occurs on hover and selection of elements.
+  Color overlayForgroundColor;
+
+  /// The color of icons throughout the application.
+  Color iconColor;
+
+  /// The color used to highlight text elements and general selection.
+  Color highlightColor;
+
+  /// The color used to indicate when an error has occured somewhere within the application.
+  Color errorColor;
+
+  /// The color used for accents and general pizaz!
+  Color accentColor;
+
+  /* ------------------------------- Font Sizing ------------------------------ */
+
+  /// The font size of title text elements.
+  double titleTextFontSize;
+
+  /// The font size of subtitle.
+  double subtitleTextFontSize;
+
+  /// The font size of text elements.
+  double textFontSize;
+
+  /// The font size of button text elements.
+  double buttonTextFontSize;
+
+  /* --------------------------------- Padding -------------------------------- */
+  /// NOTE: Some elements will use this in a calculation for their padding. Think of
+  /// these as the starting place for padding which is used bu the whole application.
+
+  /// The inner vertical padding used by each element (The space between an elements content and its container).
+  double innerVerticalPadding;
+
+  /// The inner horzontal padding used by each element (The space between an elements content and its container).
+  double innerHorizontalPadding;
+
+  /// The outer vertical padding used by each element (The space between elements).
+  double outerVerticalPadding;
+
+  /// The outer horizontal padding used by each element (The space between elements).
+  double outerHorizontalPadding;
+
+  ThemeData themeData() {
+    return ThemeData(
+      cardColor: cardBackgroundColor,
+      appBarTheme: AppBarTheme(
+        backgroundColor: iconColor,
+      ),
+
+      /* ------------------------------- Text Styles ------------------------------ */
+      textTheme: TextTheme(
+        /// Title Styling (LRG)
+        displayLarge: TextStyle(
+          color: titleTextColor,
+          fontSize: titleTextFontSize,
+          fontWeight: FontWeight.bold,
+        ),
+
+        /// Title Styling (SUB)
+        /// This is the same font size as the basic title but
+        /// utilizes the text color instead.
+        displayMedium: TextStyle(
+          color: textColor,
+          fontSize: titleTextFontSize,
+        ),
+
+        /// Title Styling (SML)
+        /// Smaller version of the title used for emphasis
+        displaySmall: TextStyle(
+          color: titleTextColor,
+          fontSize: textFontSize,
+          fontWeight: FontWeight.bold,
+        ),
+
+        /// Body Styling (LRG)
+        /// Slightly larger version of the body text.
+        bodyLarge: TextStyle(
+          color: textColor,
+          fontSize: textFontSize * 1.5,
+        ),
+
+        /// Body Styling (NORM)
+        bodyMedium: TextStyle(
+          color: textColor,
+          fontSize: textFontSize,
+        ),
+
+        /// Body Styling (SML)
+        /// Smaller version of the text style with the same coloring.
+        bodySmall: TextStyle(
+          color: textColor,
+          fontSize: subtitleTextFontSize,
+        ),
+
+        /// For buttons and related
+        labelLarge: TextStyle(
+          color: buttonTextColor,
+          fontSize: buttonTextFontSize,
+        ),
+
+        /// Subtitle large
+        titleLarge: TextStyle(
+          color: subtitleTextColor,
+          fontSize: textFontSize,
+        ),
+
+        /// Subtitle regular
+        titleMedium: TextStyle(
+          color: subtitleTextColor,
+          fontSize: subtitleTextFontSize,
+        ),
+
+        /// Subtitle small
+        titleSmall: TextStyle(
+          color: subtitleTextColor,
+          fontSize: subtitleTextFontSize * 0.75,
+        ),
+      ),
+
+      /* -------------------------------- Tool Tips ------------------------------- */
+      tooltipTheme: TooltipThemeData(
+        triggerMode: TooltipTriggerMode.longPress,
+        padding: EdgeInsets.symmetric(
+          horizontal: innerHorizontalPadding * 0.75,
+          vertical: innerVerticalPadding * 0.75,
+        ),
+        textStyle: TextStyle(
+          color: textColor,
+          fontSize: subtitleTextFontSize,
+          fontWeight: FontWeight.bold,
+        ),
+        decoration: BoxDecoration(
+          color: accentColor,
+          borderRadius: BorderRadius.circular(cardBorderRadius),
+        ),
+      ),
+    );
+  }
+}
