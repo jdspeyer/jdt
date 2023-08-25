@@ -1,6 +1,5 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:jdt/pages/dashboard_screen.dart';
 import 'splash_screen/splash_screen.dart';
 
