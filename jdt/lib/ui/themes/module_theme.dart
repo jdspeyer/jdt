@@ -1,5 +1,6 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
-import 'package:jdt/database/themebox.dart';
 
 class ModuleTheme {
   ModuleTheme({
@@ -8,9 +9,11 @@ class ModuleTheme {
     required this.id,
     required this.icon,
     required this.brightness,
+    this.titleFontFamily = "Poppins",
+    this.bodyFontFamily = "Poppins",
 
     /// Font Sizes
-    this.titleTextFontSize = 30.0,
+    this.titleTextFontSize = 20.0,
     this.subtitleTextFontSize = 12.0,
     this.textFontSize = 14.0,
     this.buttonTextFontSize = 14.0,
@@ -48,6 +51,8 @@ class ModuleTheme {
   String name;
   IconData icon;
   Brightness brightness;
+  String titleFontFamily;
+  String bodyFontFamily;
 
   /* ------------------------------ Border Radius ----------------------------- */
   /// The border radius used to round the edges of cards.
@@ -134,7 +139,17 @@ class ModuleTheme {
 
   ThemeData themeData() {
     return ThemeData(
+      /// Font Family
+      fontFamily: bodyFontFamily,
+
+      /// Background Color
+      backgroundColor: backgroundColor,
+
+      /// Color used for cards and containers
       cardColor: cardBackgroundColor,
+
+      primaryColor: accentColor,
+
       appBarTheme: AppBarTheme(
         backgroundColor: iconColor,
       ),
@@ -145,7 +160,8 @@ class ModuleTheme {
         displayLarge: TextStyle(
           color: titleTextColor,
           fontSize: titleTextFontSize,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w700,
+          fontFamily: titleFontFamily,
         ),
 
         /// Title Styling (SUB)
@@ -154,6 +170,7 @@ class ModuleTheme {
         displayMedium: TextStyle(
           color: textColor,
           fontSize: titleTextFontSize,
+          fontFamily: titleFontFamily,
         ),
 
         /// Title Styling (SML)
@@ -162,6 +179,7 @@ class ModuleTheme {
           color: titleTextColor,
           fontSize: textFontSize,
           fontWeight: FontWeight.bold,
+          fontFamily: titleFontFamily,
         ),
 
         /// Body Styling (LRG)

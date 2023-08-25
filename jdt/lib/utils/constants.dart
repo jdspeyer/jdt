@@ -6,4 +6,14 @@ const String themeBoxFontFamily = "MaterialIcons";
 /// The id of the box which contains the saved themes.
 const String themeBoxId = "themes";
 
-const Size windowSize = Size(924, 550);
+const Color logoBackgroundColor = Color(0xffffffff);
+
+const Color logoPathColor = Color(0xff000000);
+
+const String logoSplashId = 'fsk';
+
+const String logoArtBoard = 'Hippo';
+
+const String logoStateMachine = 'State Machine 1';
+
+const String logoAssetPath = 'assets/images/logo.riv';

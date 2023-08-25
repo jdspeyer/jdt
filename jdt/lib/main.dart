@@ -1,53 +1,47 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:jdt/database/data_manager.dart';
 import 'package:jdt/database/themebox.dart';
+import 'package:jdt/pages/splash_screen/splash_screen.dart';
 import 'package:jdt/ui/themes/module_theme.dart';
-import 'package:jdt/utils/constants.dart';
-import 'package:window_manager/window_manager.dart';
+import 'package:jdt/utils/app_window_manager.dart';
 
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(ThemeBoxAdapter());
-
-  await windowManager.ensureInitialized();
-  await windowManager.setMinimumSize(windowSize);
-  await windowManager.setMaximumSize(windowSize);
-  await windowManager.setResizable(false);
-  await windowManager.setSize(windowSize);
-
-  WindowOptions windowOptions = const WindowOptions(
-    center: true,
-    backgroundColor: Colors.transparent,
-    skipTaskbar: false,
-    titleBarStyle: TitleBarStyle.hidden,
-  );
-
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.show();
-    await windowManager.focus();
-  });
-
   DataManager manager = DataManager();
+  AppWindowManager window = AppWindowManager();
+  await window.setup();
   await manager.initialize();
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final routerDelegate = BeamerDelegate(
+    locationBuilder: RoutesLocationBuilder(
+      routes: {
+        '/': (_, __, ___) => const SplashScreen(),
+      },
+    ),
+  );
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     DataManager manager = DataManager();
     ModuleTheme currentTheme =
-        manager.getThemeFromStorage('jdt_core_light_theme');
+        manager.getThemeFromStorage('jdt_core_dark_theme');
 
-    return MaterialApp(
+    return MaterialApp.router(
+      routerDelegate: routerDelegate,
+      routeInformationParser: BeamerParser(),
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: currentTheme.themeData(),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }

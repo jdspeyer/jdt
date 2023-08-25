@@ -26,17 +26,23 @@ class DataManager {
     //todo
   }
 
+  validateBoxes() async {
+    if (!Hive.isBoxOpen(themeBoxId)) {
+      _themeBox = await Hive.openBox<ThemeBox>(themeBoxId);
+    }
+  }
+
   initialize() async {
     _themeBox = await Hive.openBox<ThemeBox>(themeBoxId);
 
     _themeBox.put(
-      'jdt_core_light_theme',
+      'jdt_core_dark_theme',
       ThemeBox(
-        id: 'jdt_core_light_theme',
-        name: 'Light Theme',
-        icon: Icons.light_mode_outlined.codePoint,
-        brightness: Brightness.light.toString(),
-        titleTextFontSize: 30.0,
+        id: 'jdt_core_dark_theme',
+        name: 'Dark Theme',
+        icon: Icons.star_rate_outlined.codePoint,
+        brightness: Brightness.dark.toString(),
+        titleTextFontSize: 23.0,
         subtitleTextFontSize: 12.0,
         textFontSize: 14.0,
         buttonTextFontSize: 14.0,
@@ -48,19 +54,54 @@ class DataManager {
         innerVerticalPadding: 10.0,
         outerHorizontalPadding: 20.0,
         outerVerticalPadding: 20.0,
-        textFieldBackgroundColor: const Color(0xffe7e3e8).toStringARGB,
-        cardBackgroundColor: const Color(0x77685C55).toStringARGB,
-        overlayBackgroundColor: const Color(0xff685C55).toStringARGB,
-        backgroundColor: const Color(0xffe7e3e8).toStringARGB,
-        highlightColor: const Color(0x77b7cad4).toStringARGB,
-        overlayForgroundColor: const Color(0xffe7e3e8).toStringARGB,
-        iconColor: const Color(0xff685C55).toStringARGB,
-        titleTextColor: const Color(0xff131014).toStringARGB,
-        subtitleTextColor: const Color(0xff131014).toStringARGB,
-        textColor: const Color(0xff131014).toStringARGB,
-        buttonTextColor: const Color(0xffe7e3e8).toStringARGB,
+        textFieldBackgroundColor: const Color(0xff232229).toStringARGB,
+        cardBackgroundColor: const Color(0xff232229).toStringARGB,
+        overlayBackgroundColor: const Color(0xffebf1ff).toStringARGB,
+        backgroundColor: const Color(0xff090810).toStringARGB,
+        highlightColor: const Color(0x77343447).toStringARGB,
+        overlayForgroundColor: const Color(0xff232229).toStringARGB,
+        iconColor: const Color(0xffa5bbe9).toStringARGB,
+        titleTextColor: const Color(0xfffafafa).toStringARGB,
+        subtitleTextColor: const Color(0xfffafafa).toStringARGB,
+        textColor: const Color(0xfffafafa).toStringARGB,
+        buttonTextColor: const Color(0xfffafafa).toStringARGB,
         errorColor: const Color(0xff685C55).toStringARGB,
-        accentColor: const Color(0xffb7cad4).toStringARGB,
+        accentColor: const Color(0xffa5bbe9).toStringARGB,
+      ),
+    );
+
+    _themeBox.put(
+      'jdt_core_light_theme',
+      ThemeBox(
+        id: 'jdt_core_light_theme',
+        name: 'Light Theme',
+        icon: Icons.light_mode_outlined.codePoint,
+        brightness: Brightness.light.toString(),
+        titleTextFontSize: 23.0,
+        subtitleTextFontSize: 12.0,
+        textFontSize: 14.0,
+        buttonTextFontSize: 14.0,
+        cardBorderRadius: 15.0,
+        inputBorderRadius: 30.0,
+        navbarBorderRadius: 15.0,
+        buttonBorderRadius: 15.0,
+        innerHorizontalPadding: 10.0,
+        innerVerticalPadding: 10.0,
+        outerHorizontalPadding: 20.0,
+        outerVerticalPadding: 20.0,
+        textFieldBackgroundColor: const Color(0xfffafafa).toStringARGB,
+        cardBackgroundColor: const Color(0xffEDF0F3).toStringARGB,
+        overlayBackgroundColor: const Color(0xff343447).toStringARGB,
+        backgroundColor: const Color(0xfffafafa).toStringARGB,
+        highlightColor: const Color(0x77343447).toStringARGB,
+        overlayForgroundColor: const Color(0xffFAFAFA).toStringARGB,
+        iconColor: const Color(0xff8fb3ff).toStringARGB,
+        titleTextColor: const Color(0xff090810).toStringARGB,
+        subtitleTextColor: const Color(0xff090810).toStringARGB,
+        textColor: const Color(0xff090810).toStringARGB,
+        buttonTextColor: const Color(0xff090810).toStringARGB,
+        errorColor: const Color(0xff685C55).toStringARGB,
+        accentColor: const Color(0xff8FB3FF).toStringARGB,
       ),
     );
   }
