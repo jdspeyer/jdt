@@ -5,11 +5,14 @@ abstract class JdtIcon extends StatefulWidget {
     super.key,
     required this.asset,
     this.color = Colors.black,
-    this.duration = const Duration(milliseconds: 300),
+    this.duration = const Duration(milliseconds: 450),
     this.introStartKeyFrame = 0.0,
     this.introEndKeyFrame = 0.0,
     this.hoverStartKeyFrame = 0.0,
     this.hoverEndKeyFrame = 0.0,
+    this.shrinkOnClickPercentage = 0.9,
+    this.width = 25,
+    this.height = 25,
   });
 
   String asset;
@@ -22,5 +25,11 @@ abstract class JdtIcon extends StatefulWidget {
 
   double hoverStartKeyFrame;
   double hoverEndKeyFrame;
-  bool isLoaded = false;
+
+  double shrinkOnClickPercentage;
+
+  double width;
+  double height;
+
+  bool isSelected = false;
 }

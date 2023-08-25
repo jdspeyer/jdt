@@ -45,49 +45,35 @@ class _DashboardScreenState extends State<DashboardScreen>
         padding: EdgeInsets.all(30),
         child: Column(
           children: [
-            Container(
-              width: 25,
-              height: 25,
-              child: GenericIcon(
-                asset: 'assets/images/lottie/home-icon.rough.json',
-                introEndKeyFrame: 0.13,
-                introStartKeyFrame: 0.0,
-                hoverEndKeyFrame: 1,
-                hoverStartKeyFrame: 0.86,
-              ),
+            GenericIcon(
+              asset: 'assets/images/lottie/home-icon.rough.json',
+              introEndKeyFrame: 0.13,
+              introStartKeyFrame: 0.0,
+              hoverEndKeyFrame: 1,
+              hoverStartKeyFrame: 0.86,
             ),
-            Container(
-              width: 25,
-              height: 25,
-              child: GenericIcon(
-                asset: 'assets/images/lottie/settings-icon.rough.json',
-                introEndKeyFrame: 0.23,
-                introStartKeyFrame: 0.0,
-                hoverEndKeyFrame: 0.42,
-                hoverStartKeyFrame: 0.23,
-              ),
+            GenericIcon(
+              asset: 'assets/images/lottie/settings-icon.rough.json',
+              introEndKeyFrame: 0.2,
+              introStartKeyFrame: 0.0,
+              hoverEndKeyFrame: 1,
+              hoverStartKeyFrame: 0.7,
             ),
-            Container(
+            GenericIcon(
+              asset: 'assets/images/lottie/documentation-icon.rough.json',
+              introEndKeyFrame: 0.2,
+              introStartKeyFrame: 0.0,
+              hoverEndKeyFrame: 1,
+              hoverStartKeyFrame: 0.82,
               width: 25,
               height: 25,
-              child: GenericIcon(
-                asset: 'assets/images/lottie/documentation-icon.rough.json',
-                introEndKeyFrame: 0.2,
-                introStartKeyFrame: 0.0,
-                hoverEndKeyFrame: 0.7,
-                hoverStartKeyFrame: 0.5,
-              ),
             ),
-            Container(
-              width: 25,
-              height: 25,
-              child: GenericIcon(
-                asset: 'assets/images/lottie/add-module-icon.rough.json',
-                introEndKeyFrame: 0.5,
-                introStartKeyFrame: 0.0,
-                hoverEndKeyFrame: 1,
-                hoverStartKeyFrame: 0.5,
-              ),
+            GenericIcon(
+              asset: 'assets/images/lottie/add-module-icon.rough.json',
+              introEndKeyFrame: 0.2,
+              introStartKeyFrame: 0.0,
+              hoverEndKeyFrame: 1,
+              hoverStartKeyFrame: 0.7,
             ),
           ],
         ),

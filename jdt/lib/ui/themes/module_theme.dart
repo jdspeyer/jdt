@@ -244,6 +244,10 @@ class ModuleTheme {
           borderRadius: BorderRadius.circular(cardBorderRadius),
         ),
       ),
+
+      iconTheme: IconThemeData(
+        color: iconColor,
+      ),
     );
   }
 }

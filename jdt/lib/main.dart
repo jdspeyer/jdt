@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     DataManager manager = DataManager();
     ModuleTheme currentTheme =
-        manager.getThemeFromStorage('jdt_core_light_theme');
+        manager.getThemeFromStorage('jdt_core_dark_theme');
 
     return MaterialApp.router(
       routerDelegate: routerDelegate,
