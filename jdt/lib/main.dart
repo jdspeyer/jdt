@@ -5,6 +5,7 @@ import 'package:jdt/database/data_manager.dart';
 import 'package:jdt/database/themebox.dart';
 import 'package:jdt/pages/splash_screen/splash_screen.dart';
 import 'package:jdt/ui/themes/module_theme.dart';
+import 'package:jdt/ui/themes/theme_manager.dart';
 import 'package:jdt/utils/app_window_manager.dart';
 
 void main() async {
@@ -33,15 +34,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DataManager manager = DataManager();
-    ModuleTheme currentTheme =
+    ModuleThemeManager themeManager = ModuleThemeManager();
+    ModuleTheme selectedTheme =
         manager.getThemeFromStorage('jdt_core_dark_theme');
+    themeManager.theme = selectedTheme;
 
     return MaterialApp.router(
       routerDelegate: routerDelegate,
       routeInformationParser: BeamerParser(),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: currentTheme.themeData(),
+      theme: selectedTheme.themeData(),
     );
   }
 }

@@ -5,15 +5,24 @@ import 'package:jdt/utils/constants.dart';
 import 'package:rive/components.dart';
 import 'package:rive/rive.dart';
 
+/* ------------------------------ AnimatedLogo ------------------------------ */
+/// The [AnimatedLogo] is a .riv file loaded in using the Rive package. This is a
+/// different take on dynamic animations and has a state machine built directly into the
+/// animation.
+///
+/// More information can be found: https://rive.app/
 class AnimatedLogo extends StatelessWidget {
   AnimatedLogo({
     super.key,
   });
-  AppWindowManager _appWindowManager = AppWindowManager();
 
+  /// Gets the singelton [AppWindowManager]
+  final AppWindowManager _appWindowManager = AppWindowManager();
+
+  /* ---------------------------------- build --------------------------------- */
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: _appWindowManager.windowSize.width / 2,
       height: _appWindowManager.windowSize.height / 2,
       child: RiveAnimation.asset(
