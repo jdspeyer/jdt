@@ -1,0 +1,31 @@
+name: Bug Report
+description: You have encountered an issue with Huppo.
+title: "[BUG] <description>"
+labels: ["Bug"]
+body:
+- type: checkboxes
+  attributes:
+    label: Is there an existing issue for this?
+    description: Please search for similar Bug reports to make sure you are not creating a duplicate request.
+    options:
+    - label: I have searched the existing issues.
+      required: true
+- type: textarea
+  attributes:
+    label: Description Of Bug
+    description: Please provide a description of what this bug is.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Steps to reproduce
+    description: Please explain the steps taken to reproduce this bug (This can be a description, images, or combination of both).
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Anything else?
+    description: |
+      If you have ideas what might be causing this bug you can leave them here. Otherwise this can be ommited.
+  validations:
+    required: false

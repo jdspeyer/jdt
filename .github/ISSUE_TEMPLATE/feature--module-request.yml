@@ -1,7 +1,7 @@
 name: Module Request
 description: Request a new module to be added to Huppo.
-title: "[FEATURE] <title>"
-labels: ["Feature", "Module"]
+title: "[MODULE] <title>"
+labels: ["Module"]
 body:
 - type: checkboxes
   attributes:
@@ -15,7 +15,7 @@ body:
     label: Is there an existing issue for this?
     description: Please search for similar Module requests to make sure you are not creating a duplicate request.
     options:
-    - label: I have searched the existing issues
+    - label: I have searched the existing issues.
       required: true
 - type: textarea
   attributes:
