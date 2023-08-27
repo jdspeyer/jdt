@@ -7,7 +7,13 @@ import 'package:jdt/ui/themes/theme_manager.dart';
 import '../ui/themes/module_theme.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+  DashboardScreen({super.key});
+
+  /// Path Location
+  static const String path = '/dashboard';
+
+  /// Beamer Key for State
+  final beamerKey = GlobalKey<BeamerState>();
 
   /// Beam Page
   static BeamPage beamLocation = NoTransitionPage(
@@ -16,8 +22,12 @@ class DashboardScreen extends StatefulWidget {
     isEmbelished: false,
   );
 
-  /// Path Location
-  static const String path = '/dashboard';
+  final routeDelegate = BeamerDelegate(
+    removeDuplicateHistory: true,
+    locationBuilder: BeamerLocationBuilder(
+      beamLocations: [],
+    ),
+  );
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
