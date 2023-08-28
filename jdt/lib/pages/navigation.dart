@@ -3,6 +3,8 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:jdt/pages/dashboard_screen.dart';
+import 'package:jdt/pages/home_screen/home_screen.dart';
+import 'package:jdt/pages/setting_screen/settings_screen.dart';
 import 'splash_screen/splash_screen.dart';
 
 /* ---------------------------- DashboardLocation --------------------------- */
@@ -12,13 +14,44 @@ class DashboardLocation extends BeamLocation {
   List<BeamPage> buildPages(
       BuildContext context, RouteInformationSerializable state) {
     final pages = [
+      /// Default
       DashboardScreen.beamLocation,
     ];
     return pages;
   }
 
   @override
-  List<Pattern> get pathPatterns => [DashboardScreen.path];
+  List<Pattern> get pathPatterns => ["${DashboardScreen.path}/*"];
+}
+
+/* ------------------------------ HomeLocation ------------------------------ */
+/// TODO: Write Comment
+class HomeLocation extends BeamLocation {
+  @override
+  List<BeamPage> buildPages(
+      BuildContext context, RouteInformationSerializable state) {
+    final pages = [HomeScreen.beamLocation];
+    return pages;
+  }
+
+  @override
+  List<Pattern> get pathPatterns => [HomeScreen.path];
+}
+
+/* ------------------------------ SettingsLocation ------------------------------ */
+/// TODO: Write Comment
+class SettingsLocation extends BeamLocation {
+  @override
+  List<BeamPage> buildPages(
+      BuildContext context, RouteInformationSerializable state) {
+    final pages = [
+      SettingsScreen.beamLocation,
+    ];
+    return pages;
+  }
+
+  @override
+  List<Pattern> get pathPatterns => [SettingsScreen.path];
 }
 
 /* ----------------------------- SplashLocation ----------------------------- */
@@ -28,7 +61,7 @@ class SplashLocation extends BeamLocation {
   List<BeamPage> buildPages(
       BuildContext context, RouteInformationSerializable state) {
     final pages = [
-      const BeamPage(
+      BeamPage(
         key: ValueKey(SplashScreen.beamLocation),
         child: SplashScreen(),
       ),
@@ -56,6 +89,7 @@ class NoTransitionPage extends BeamPage {
   bool isEmbelished;
   @override
   Route createRoute(BuildContext context) {
+    print("started");
     return PageRouteBuilder(
       settings: this,
       pageBuilder: (context, animation, secondaryAnimation) => child,

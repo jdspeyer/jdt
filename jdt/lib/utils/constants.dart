@@ -6,6 +6,10 @@ const String themeBoxFontFamily = "MaterialIcons";
 /// The id of the box which contains the saved themes.
 const String themeBoxId = "themes";
 
+const String userBoxId = "user";
+
+const String currentUserId = "jdt-current-user";
+
 /// The color which the logo (Hippo) had as its background color by default.
 /// This is used to identify it and then replace it with the theme background color.
 const Color logoBackgroundColor = Color(0xffffffff);
@@ -27,3 +31,6 @@ const String logoStateMachine = 'State Machine 1';
 
 /// The path to the logo (Hippo)
 const String logoAssetPath = 'assets/images/logo.riv';
+
+const String accessKey =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtidXhxZXdoY3V0ZGVxcGRsZXJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTMyMTA5NDUsImV4cCI6MjAwODc4Njk0NX0.L-D7aLVQ-o9fcFxBBjy8V716SvsqvzLM9L0lTewHrBA';

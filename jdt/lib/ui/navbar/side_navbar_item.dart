@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jdt/ui/icons/animated_icon.dart';
+import 'package:jdt/ui/icons/jdt_icon.dart';
 import 'package:jdt/ui/icons/generic_icon.dart';
 import 'package:jdt/ui/navbar/side_navbar_item_def.dart';
 

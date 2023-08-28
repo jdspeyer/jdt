@@ -13,13 +13,14 @@ import 'package:percent_indicator/percent_indicator.dart';
 /// The [SplashScreen] is where the assets and other loading processes occur while
 /// the user is allowed to play with our lil Hippo (he is so cute!).
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  SplashScreen({super.key});
 
   /// [beamLocation] for navigation to the page.
-  static const beamLocation = BeamPage(
+  static final beamLocation = BeamPage(
     key: ValueKey('splashscreen'),
     child: SplashScreen(),
   );
+  final beamerKey = GlobalKey<BeamerState>();
 
   /// Path Location
   static const String path = '/splashscreen';
@@ -65,8 +66,20 @@ class _SplashScreenState extends State<SplashScreen>
 
     /// Loading is now completed! We can tell the user as such.
     setState(() {
-      _loadingTitle = 'Complete!';
-      _loadingMessage = "Thank you for waiting!";
+      if (_dataManager.getUserFromStorage().getProfileEditCompletion() < 0.1) {
+        _loadingTitle = 'Welcome to Huppo!';
+        _loadingMessage = "You're going to love it here :)";
+      } else {
+        if (_dataManager.getUserFromStorage().firstName.length > 10) {
+          _loadingTitle =
+              'Welcome back ${_dataManager.getUserFromStorage().firstName.substring(0, 9)}...!';
+        } else {
+          _loadingTitle =
+              'Welcome back ${_dataManager.getUserFromStorage().firstName}!';
+        }
+
+        _loadingMessage = "Did you miss me?";
+      }
     });
 
     /// Animate to the blank page
@@ -78,8 +91,10 @@ class _SplashScreenState extends State<SplashScreen>
     /// Wait for this animation to occur
     await Future.delayed(const Duration(milliseconds: 1600));
 
+    _dataManager.markAsLoaded();
+
     /// Beam the user to the dashboard.
-    Beamer.of(context).beamTo(DashboardLocation());
+    Beamer.of(context).beamToReplacement(DashboardLocation());
   }
 
   /* --------------------------- _dataManagerLoading -------------------------- */
@@ -187,16 +202,19 @@ class _SplashScreenState extends State<SplashScreen>
                         SizedBox(
                             width: _appWindowManager.windowSize.width / 4,
                             height: 4,
-                            child: LinearPercentIndicator(
-                              barRadius: const Radius.circular(20),
-                              percent: _loadingProgress,
-                              animateFromLastPercent: true,
-                              animation: true,
-                              progressColor: Theme.of(context).backgroundColor,
-                              backgroundColor: Theme.of(context)
-                                  .backgroundColor
-                                  .withOpacity(0.4),
-                            )),
+                            child: (mounted)
+                                ? LinearPercentIndicator(
+                                    barRadius: const Radius.circular(20),
+                                    percent: _loadingProgress,
+                                    animateFromLastPercent: true,
+                                    animation: true,
+                                    progressColor:
+                                        Theme.of(context).backgroundColor,
+                                    backgroundColor: Theme.of(context)
+                                        .backgroundColor
+                                        .withOpacity(0.4),
+                                  )
+                                : Container()),
                       ],
                     ),
                   ),

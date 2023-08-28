@@ -16,16 +16,20 @@ class DashboardScreen extends StatefulWidget {
   final beamerKey = GlobalKey<BeamerState>();
 
   /// Beam Page
-  static BeamPage beamLocation = NoTransitionPage(
+  static BeamPage beamLocation = BeamPage(
     key: const ValueKey('dashboard'),
     child: DashboardScreen(),
-    isEmbelished: false,
   );
 
   final routeDelegate = BeamerDelegate(
     removeDuplicateHistory: true,
+    transitionDelegate: NoAnimationTransitionDelegate(),
+    initialPath: '/dashboard',
     locationBuilder: BeamerLocationBuilder(
-      beamLocations: [],
+      beamLocations: [
+        HomeLocation(),
+        SettingsLocation(),
+      ],
     ),
   );
 
@@ -60,15 +64,22 @@ class _DashboardScreenState extends State<DashboardScreen>
             left: _loadedTheme.outerHorizontalPadding,
             right: _loadedTheme.outerHorizontalPadding,
             top: _loadedTheme.outerVerticalPadding),
-        child: Stack(
+        child: Row(
           children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-            ),
             SideNavbar(
               width: 55,
               height: MediaQuery.of(context).size.height,
+              delegate: widget.routeDelegate,
+            ),
+            Expanded(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Beamer(
+                  key: widget.beamerKey,
+                  routerDelegate: widget.routeDelegate,
+                ),
+              ),
             ),
           ],
         ),

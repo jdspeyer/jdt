@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:jdt/database/jdt_user.dart';
+import 'package:jdt/database/userbox.dart';
 import 'package:jdt/utils/constants.dart';
 import 'package:jdt/database/themebox.dart';
 import 'package:jdt/ui/themes/module_theme.dart';
@@ -12,7 +14,9 @@ import 'package:jdt/utils/extensions.dart';
 class DataManager {
   static final DataManager _instance = DataManager._internal();
   static late Box _themeBox;
+  static late Box _userBox;
 
+  static bool _hasLoaded = false;
   /* -------------------------- factory DataManager -------------------------- */
   /// This returns the global instance of the [DataManager] and ensures that no additional
   /// [DataManager] instances are ever constructed.
@@ -26,14 +30,50 @@ class DataManager {
     //todo
   }
 
+  markAsLoaded() {
+    _hasLoaded = true;
+  }
+
+  bool get hasLoaded => _hasLoaded;
+
+  /* ------------------------------ validateBoxes ----------------------------- */
+  /// Validates the integrity of internal storage.
   validateBoxes() async {
+    /// Is the theme box open and operatable?
     if (!Hive.isBoxOpen(themeBoxId)) {
       _themeBox = await Hive.openBox<ThemeBox>(themeBoxId);
+    }
+
+    /// Is the user box open and operatable?
+    if (!Hive.isBoxOpen(userBoxId)) {
+      _userBox = await Hive.openBox<ThemeBox>(userBoxId);
     }
   }
 
   initialize() async {
     _themeBox = await Hive.openBox<ThemeBox>(themeBoxId);
+    _userBox = await Hive.openBox<UserBox>(userBoxId);
+
+    /// Has a user been created before?
+    // if (!_userBox.keys.contains(currentUserId)) {
+    _userBox.put(
+        currentUserId,
+        UserBox(
+          firstName: "New",
+          lastName: "User",
+          email: "NewUser@mail.com",
+          shareEmail: false,
+          phoneNumber: 11234567890,
+          sharePhoneNumber: false,
+          allowNotifications: false,
+          hasEditedEmail: false,
+          hasEditedFirstName: false,
+          hasEditedLastName: false,
+          hasEditedPhoneNumber: false,
+          hasEditedToggleSettings: false,
+          hasFinishedProfileSetup: false,
+        ));
+    // }
 
     _themeBox.put(
       'jdt_core_dark_theme',
@@ -50,8 +90,8 @@ class DataManager {
         inputBorderRadius: 30.0,
         navbarBorderRadius: 15.0,
         buttonBorderRadius: 15.0,
-        innerHorizontalPadding: 10.0,
-        innerVerticalPadding: 10.0,
+        innerHorizontalPadding: 15.0,
+        innerVerticalPadding: 15.0,
         outerHorizontalPadding: 25.0,
         outerVerticalPadding: 30.0,
         textFieldBackgroundColor: const Color(0xff232229).toStringARGB,
@@ -85,8 +125,8 @@ class DataManager {
         inputBorderRadius: 30.0,
         navbarBorderRadius: 15.0,
         buttonBorderRadius: 15.0,
-        innerHorizontalPadding: 10.0,
-        innerVerticalPadding: 10.0,
+        innerHorizontalPadding: 15.0,
+        innerVerticalPadding: 15.0,
         outerHorizontalPadding: 25.0,
         outerVerticalPadding: 30.0,
         textFieldBackgroundColor: const Color(0xfffafafa).toStringARGB,
@@ -165,5 +205,63 @@ class DataManager {
       outerHorizontalPadding: retrievedTheme.outerHorizontalPadding,
       outerVerticalPadding: retrievedTheme.outerVerticalPadding,
     );
+  }
+
+  JdtUser getUserFromStorage() {
+    var retrievedUser = _userBox.get(currentUserId);
+
+    if (retrievedUser.runtimeType != UserBox) {
+      return JdtUser(
+        firstName: "Error",
+        lastName: "Error",
+        email: "Error",
+        shareEmail: false,
+        phoneNumber: 123,
+        sharePhoneNumber: false,
+        allowNotifications: false,
+        hasEditedEmail: false,
+        hasEditedFirstName: false,
+        hasEditedLastName: false,
+        hasEditedPhoneNumber: false,
+        hasEditedToggleSettings: false,
+        hasFinishedProfileSetup: false,
+      );
+    }
+
+    return JdtUser(
+      firstName: retrievedUser.firstName,
+      lastName: retrievedUser.lastName,
+      email: retrievedUser.email,
+      shareEmail: retrievedUser.shareEmail,
+      phoneNumber: retrievedUser.phoneNumber,
+      sharePhoneNumber: retrievedUser.sharePhoneNumber,
+      allowNotifications: retrievedUser.allowNotifications,
+      hasEditedEmail: retrievedUser.hasEditedEmail,
+      hasEditedFirstName: retrievedUser.hasEditedFirstName,
+      hasEditedLastName: retrievedUser.hasEditedLastName,
+      hasEditedPhoneNumber: retrievedUser.hasEditedPhoneNumber,
+      hasEditedToggleSettings: retrievedUser.hasEditedToggleSettings,
+      hasFinishedProfileSetup: retrievedUser.hasFinishedProfileSetup,
+    );
+  }
+
+  saveUserToStorage(JdtUser user) {
+    _userBox.put(
+        currentUserId,
+        UserBox(
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          shareEmail: user.shareEmail,
+          phoneNumber: user.phoneNumber,
+          sharePhoneNumber: user.sharePhoneNumber,
+          allowNotifications: user.allowNotifications,
+          hasEditedEmail: user.hasEditedEmail,
+          hasEditedFirstName: user.hasEditedFirstName,
+          hasEditedLastName: user.hasEditedLastName,
+          hasEditedPhoneNumber: user.hasEditedPhoneNumber,
+          hasEditedToggleSettings: user.hasEditedToggleSettings,
+          hasFinishedProfileSetup: user.hasFinishedProfileSetup,
+        ));
   }
 }

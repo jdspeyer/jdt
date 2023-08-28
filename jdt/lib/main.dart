@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:jdt/database/data_manager.dart';
 import 'package:jdt/database/themebox.dart';
+import 'package:jdt/database/userbox.dart';
+import 'package:jdt/pages/dashboard_screen.dart';
 import 'package:jdt/pages/splash_screen/splash_screen.dart';
 import 'package:jdt/ui/themes/module_theme.dart';
 import 'package:jdt/ui/themes/theme_manager.dart';
@@ -11,6 +13,8 @@ import 'package:jdt/utils/app_window_manager.dart';
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(ThemeBoxAdapter());
+  Hive.registerAdapter(UserBoxAdapter());
+
   DataManager manager = DataManager();
   AppWindowManager window = AppWindowManager();
   await window.setup();
@@ -23,9 +27,12 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
 
   final routerDelegate = BeamerDelegate(
+    transitionDelegate: NoAnimationTransitionDelegate(),
+    initialPath: '/splashscreen',
     locationBuilder: RoutesLocationBuilder(
       routes: {
-        '/': (_, __, ___) => const SplashScreen(),
+        '/splashscreen': (context, state, data) => SplashScreen(),
+        '/dashboard/*': (context, state, data) => DashboardScreen(),
       },
     ),
   );
@@ -38,7 +45,6 @@ class MyApp extends StatelessWidget {
     ModuleTheme selectedTheme =
         manager.getThemeFromStorage('jdt_core_dark_theme');
     themeManager.theme = selectedTheme;
-
     return MaterialApp.router(
       routerDelegate: routerDelegate,
       routeInformationParser: BeamerParser(),

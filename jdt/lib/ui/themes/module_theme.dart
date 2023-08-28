@@ -150,6 +150,13 @@ class ModuleTheme {
 
       primaryColor: accentColor,
 
+      errorColor: accentColor,
+
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: accentColor,
+        selectionColor: accentColor.withOpacity(0.2),
+      ),
+
       appBarTheme: AppBarTheme(
         backgroundColor: iconColor,
       ),
@@ -169,7 +176,8 @@ class ModuleTheme {
         /// utilizes the text color instead.
         displayMedium: TextStyle(
           color: textColor,
-          fontSize: titleTextFontSize,
+          fontSize: titleTextFontSize * 0.75,
+          fontWeight: FontWeight.w400,
           fontFamily: titleFontFamily,
         ),
 
@@ -178,7 +186,6 @@ class ModuleTheme {
         displaySmall: TextStyle(
           color: titleTextColor,
           fontSize: textFontSize,
-          fontWeight: FontWeight.bold,
           fontFamily: titleFontFamily,
         ),
 
@@ -216,14 +223,16 @@ class ModuleTheme {
 
         /// Subtitle regular
         titleMedium: TextStyle(
-          color: subtitleTextColor,
-          fontSize: subtitleTextFontSize,
+          color: subtitleTextColor.withOpacity(0.9),
+          fontWeight: FontWeight.w500,
+          fontSize: textFontSize,
         ),
 
         /// Subtitle small
         titleSmall: TextStyle(
-          color: subtitleTextColor,
-          fontSize: subtitleTextFontSize * 0.75,
+          color: subtitleTextColor.withOpacity(0.85),
+          fontSize: subtitleTextFontSize,
+          fontWeight: FontWeight.w400,
         ),
       ),
 
@@ -245,8 +254,70 @@ class ModuleTheme {
         ),
       ),
 
+      /* ---------------------------------- Icons --------------------------------- */
       iconTheme: IconThemeData(
         color: iconColor,
+      ),
+
+      /* -------------------------------- Dividers -------------------------------- */
+      dividerTheme: DividerThemeData(
+        color: backgroundColor,
+        thickness: 2,
+      ),
+
+      inputDecorationTheme: InputDecorationTheme(
+        /// Generic
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: textColor.withOpacity(0.3)),
+          borderRadius: BorderRadius.all(Radius.circular(cardBorderRadius)),
+        ),
+
+        /// Enabled
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: textColor.withOpacity(0.3)),
+          borderRadius: BorderRadius.all(Radius.circular(cardBorderRadius)),
+        ),
+
+        /// Disabled
+        disabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: textColor.withOpacity(0.3)),
+          borderRadius: BorderRadius.all(Radius.circular(cardBorderRadius)),
+        ),
+
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: textColor),
+          borderRadius: BorderRadius.all(Radius.circular(cardBorderRadius)),
+        ),
+
+        /// Error Border
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: accentColor),
+          borderRadius: BorderRadius.all(Radius.circular(cardBorderRadius)),
+        ),
+
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: accentColor),
+          borderRadius: BorderRadius.all(
+            Radius.circular(cardBorderRadius),
+          ),
+        ),
+
+        iconColor: textColor,
+        hintStyle: TextStyle(
+          color: textColor.withOpacity(0.3),
+          fontSize: textFontSize,
+        ),
+        helperStyle: TextStyle(
+          color: textColor.withOpacity(0.3),
+          fontSize: textFontSize,
+        ),
+
+        errorStyle: TextStyle(
+          color: accentColor,
+          fontSize: subtitleTextFontSize,
+          height: 0.3,
+        ),
+        fillColor: textFieldBackgroundColor,
       ),
     );
   }

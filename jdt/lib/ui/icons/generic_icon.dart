@@ -1,5 +1,5 @@
 // ignore_for_file: must_be_immutable, deprecated_member_use
-import 'package:jdt/ui/icons/animated_icon.dart';
+import 'package:jdt/ui/icons/jdt_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 

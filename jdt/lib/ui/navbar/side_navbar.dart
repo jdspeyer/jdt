@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:jdt/ui/icons/generic_icon.dart';
@@ -13,18 +14,19 @@ class SideNavbar extends StatefulWidget {
     super.key,
     required this.width,
     required this.height,
+    required this.delegate,
   });
 
   double width;
   double height;
   bool isSelected = false;
+  BeamerDelegate delegate;
 
   late final List<SideNavbarItemDef> _navbarItemDefinitions = [
     SideNavbarItemDef(
       route: '/dashboard/home',
       iconAsset: 'assets/images/lottie/home-icon.rough.json',
       keyFrames: const [0.0, 0.13, 0.86, 1],
-      isSelected: true,
     ),
     SideNavbarItemDef(
       route: '/dashboard/addmodule',
@@ -78,12 +80,15 @@ class _SideNavbarState extends State<SideNavbar> {
       for (SideNavbarItemDef itemDef in widget._navbarItemDefinitions) {
         itemDef.needsReset = false;
 
-        if (itemDef.isSelected) {
+        if (itemDef.isSelected && itemDef.route != route) {
           itemDef.needsReset = true;
         }
 
         if (itemDef.route == route) {
           itemDef.isSelected = true;
+
+          widget.delegate.beamToNamed(itemDef.route);
+          print(widget.delegate.beamingHistory);
         } else {
           itemDef.isSelected = false;
         }
@@ -92,10 +97,17 @@ class _SideNavbarState extends State<SideNavbar> {
   }
 
   @override
+  void initState() {
+    _clearNavSelection('/dashboard/home');
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
         bottom: _loadedTheme.outerHorizontalPadding,
+        right: _loadedTheme.outerHorizontalPadding,
       ),
       child: Container(
         padding:
