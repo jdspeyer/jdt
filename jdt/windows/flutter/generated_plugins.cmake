@@ -3,10 +3,8 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  app_links
   rive_common
   screen_retriever
-  url_launcher_windows
   window_manager
 )
 

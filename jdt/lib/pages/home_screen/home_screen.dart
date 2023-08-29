@@ -1,6 +1,6 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-import 'package:jdt/pages/navigation.dart';
+import 'package:jdt/ui/navbar/navigation.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

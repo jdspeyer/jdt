@@ -3,7 +3,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:jdt/database/data_manager.dart';
-import 'package:jdt/pages/navigation.dart';
+import 'package:jdt/ui/navbar/navigation.dart';
 import 'package:jdt/pages/splash_screen/animated_logo.dart';
 import 'package:jdt/utils/app_window_manager.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
@@ -17,7 +17,7 @@ class SplashScreen extends StatefulWidget {
 
   /// [beamLocation] for navigation to the page.
   static final beamLocation = BeamPage(
-    key: ValueKey('splashscreen'),
+    key: const ValueKey('splashscreen'),
     child: SplashScreen(),
   );
   final beamerKey = GlobalKey<BeamerState>();
@@ -94,7 +94,7 @@ class _SplashScreenState extends State<SplashScreen>
     _dataManager.markAsLoaded();
 
     /// Beam the user to the dashboard.
-    Beamer.of(context).beamToReplacement(DashboardLocation());
+    Beamer.of(context).beamToReplacement(SigninLocation());
   }
 
   /* --------------------------- _dataManagerLoading -------------------------- */
