@@ -1,14 +1,14 @@
 // ignore_for_file: must_be_immutable, deprecated_member_use
+import 'package:flutter/foundation.dart';
 import 'package:jdt/ui/icons/jdt_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-/* ------------------------------- GenericIcon ------------------------------ */
-/// Extends the [JdtIcon] class. [GenericIcon] is an animated icon which has an intro
-/// animation which plays on load, and a hover animation. The effect stops when the
-/// user clicks on the icon.
-class GenericIcon extends JdtIcon {
-  GenericIcon({
+/* ------------------------------- TextFieldIcon ------------------------------ */
+/// Extends the [JdtIcon] class. [TextFieldIcon] is an icon designed to animate to a position
+/// while the user types and then un animate from that position when the user stops typing.
+class TextFieldIcon extends JdtIcon {
+  TextFieldIcon({
     super.key,
     required super.asset,
     super.color,
@@ -21,18 +21,19 @@ class GenericIcon extends JdtIcon {
     super.width,
     super.height,
     super.isSelected,
-    required this.tapCallback,
-    required this.needsReset,
+    this.needsReset = false,
+    this.canTap = false,
+    this.tapCallback,
   });
-
-  VoidCallback tapCallback;
   bool needsReset;
+  bool canTap;
+  VoidCallback? tapCallback;
 
   @override
-  State<GenericIcon> createState() => _GenericIconState();
+  State<TextFieldIcon> createState() => _GenericIconState();
 }
 
-class _GenericIconState extends State<GenericIcon>
+class _GenericIconState extends State<TextFieldIcon>
     with TickerProviderStateMixin {
   /// The [AnimationController] for keyframes and general animation playback
   late AnimationController _controller;
@@ -46,52 +47,50 @@ class _GenericIconState extends State<GenericIcon>
   /// 1 means default size. (x*1 = x)
   double _sizeConstraint = 1;
 
-  /* ------------------------------- hoverEngine ------------------------------ */
-  /// A method which is called by the [InkWell] hover callback in the build method.
-  /// The [hoverEngine] decides what icon animations should be played and when.
-  hoverEngine(bool isHovering) {
-    /// The animation is selected. Return and ignore any further instruction.
-    if (widget.isSelected) {
-      return;
-    }
+  bool _isTyping = false;
 
-    /// [isHovering] is true, so the user is mousing over the icon.
-    /// Play animation. Otherwise, play the animation in reverse.
-    if (isHovering) {
-      hoverEnterAnimation();
-    } else {
-      hoverExitAnimation();
+  /* --------------------------- typingStartAnimation -------------------------- */
+  /// Animation which is played when the user clicks the associated text box and starts typing.
+  typingStartAnimation() async {
+    _isTyping = true;
+    if (_controller.value != widget.hoverEndKeyFrame) {
+      _controller.value = widget.hoverStartKeyFrame;
+      _controller.animateTo(
+        widget.hoverEndKeyFrame,
+        duration: widget.duration,
+      );
     }
   }
 
-  /* --------------------------- hoverEnterAnimation -------------------------- */
-  /// Animation which is played during the enterance of a hover.
-  hoverEnterAnimation() async {
-    _controller.value = widget.hoverStartKeyFrame;
-    _controller.animateTo(
-      widget.hoverEndKeyFrame,
-      duration: widget.duration,
-    );
-  }
-
-  /* --------------------------- hoverExitAnimation --------------------------- */
-  /// Animation which is played during the exit of a hover.
-  hoverExitAnimation() async {
-    _controller.value = widget.hoverEndKeyFrame;
-    _controller.animateTo(
-      widget.hoverStartKeyFrame,
-      duration: widget.duration,
-    );
+  /* --------------------------- typingEndAnimation --------------------------- */
+  /// Animation which is played when the user exits the text box.
+  typingEndAnimation() async {
+    if (_controller.value != widget.hoverStartKeyFrame) {
+      _controller.value = widget.hoverEndKeyFrame;
+      _controller.animateTo(
+        widget.hoverStartKeyFrame,
+        duration: widget.duration,
+      );
+      _isTyping = false;
+    }
   }
 
   /* -------------------------------- tapEngine ------------------------------- */
   /// The [tapEngine] is reposible for handling any tap requests on this icon.
   tapEngine() async {
-    await tapAnimation();
+    if (widget.canTap) {
+      await tapAnimation();
 
-    setState(() {
-      widget.tapCallback();
-    });
+      setState(() {
+        try {
+          widget.tapCallback!();
+        } catch (e) {
+          if (kDebugMode) {
+            print("Error occured.");
+          }
+        }
+      });
+    }
   }
 
   /* ------------------------------ tapAnimation ------------------------------ */
@@ -115,7 +114,6 @@ class _GenericIconState extends State<GenericIcon>
   @override
   void initState() {
     _controller = AnimationController(vsync: this);
-    _sizeController = AnimationController(vsync: this, value: _sizeConstraint);
     super.initState();
   }
 
@@ -123,17 +121,16 @@ class _GenericIconState extends State<GenericIcon>
   @override
   void dispose() {
     _controller.dispose();
-    _sizeController.dispose();
     super.dispose();
   }
 
   /* ---------------------------------- build --------------------------------- */
   @override
   Widget build(BuildContext context) {
-    if (widget.needsReset) {
-      hoverExitAnimation();
-      widget.needsReset = false;
-      setState(() {});
+    if (widget.isSelected && !_isTyping) {
+      typingStartAnimation();
+    } else if (!widget.isSelected && _isTyping) {
+      typingEndAnimation();
     }
     return SizedBox(
       width: widget.width,
@@ -151,7 +148,6 @@ class _GenericIconState extends State<GenericIcon>
             focusColor: Colors.transparent,
             overlayColor: MaterialStateProperty.all(Colors.transparent),
             onTap: tapEngine,
-            onHover: hoverEngine,
             child: Lottie.asset(
               widget.asset,
               controller: _controller,
@@ -175,15 +171,15 @@ class _GenericIconState extends State<GenericIcon>
                 values: [
                   ValueDelegate.color(
                     const ['**'],
-                    value: (!widget.isSelected)
-                        ? Theme.of(context).textTheme.button!.color
-                        : Theme.of(context).iconTheme.color,
+                    value: (widget.isSelected && widget.canTap)
+                        ? Theme.of(context).iconTheme.color
+                        : Theme.of(context).textTheme.button!.color,
                   ),
                   ValueDelegate.strokeColor(
                     const ['**'],
-                    value: (!widget.isSelected)
-                        ? Theme.of(context).textTheme.button!.color
-                        : Theme.of(context).iconTheme.color,
+                    value: (widget.isSelected && widget.canTap)
+                        ? Theme.of(context).iconTheme.color
+                        : Theme.of(context).textTheme.button!.color,
                   ),
                 ],
               ),

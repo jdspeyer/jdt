@@ -83,7 +83,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       await Future.delayed(Duration(seconds: 3));
       widget._controllerTopCenter.stop();
     }
-    print("ran");
   }
 
   @override

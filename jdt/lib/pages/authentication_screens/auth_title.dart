@@ -17,7 +17,7 @@ class AuthTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        top: _loadedTheme.innerVerticalPadding,
+        top: _loadedTheme.innerVerticalPadding * 0.1,
       ),
       child: RichText(
         text: TextSpan(

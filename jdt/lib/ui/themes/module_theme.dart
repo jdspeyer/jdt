@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class ModuleTheme {
   ModuleTheme({
@@ -318,6 +319,23 @@ class ModuleTheme {
           height: 0.3,
         ),
         fillColor: textFieldBackgroundColor,
+        contentPadding: EdgeInsets.all(innerHorizontalPadding),
+        constraints: BoxConstraints(
+          minHeight: 50,
+        ),
+      ),
+
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(buttonBorderRadius)),
+          ),
+          backgroundColor: accentColor,
+          foregroundColor: buttonTextColor,
+          padding: EdgeInsets.symmetric(
+              vertical: innerVerticalPadding,
+              horizontal: innerHorizontalPadding),
+        ),
       ),
     );
   }

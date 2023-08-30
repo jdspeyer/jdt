@@ -1,8 +1,9 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:jdt/pages/authentication_screens/auth_button.dart';
 import 'package:jdt/pages/authentication_screens/auth_logo.dart';
+import 'package:jdt/pages/authentication_screens/auth_text_field.dart';
 import 'package:jdt/pages/authentication_screens/auth_title.dart';
-import 'package:jdt/pages/setting_screen/settings_text_field.dart';
 import 'package:jdt/ui/themes/module_theme.dart';
 import 'package:jdt/ui/themes/theme_manager.dart';
 
@@ -33,12 +34,26 @@ class _SigninScreenState extends State<SigninScreen> {
       backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(
         children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(
+                Radius.circular(_loadedTheme.cardBorderRadius),
+              ),
+              image: DecorationImage(
+                image: AssetImage('assets/images/Shapes2.png'),
+                fit: BoxFit.cover,
+                scale: 5.0,
+                opacity:
+                    (_loadedTheme.brightness == Brightness.dark) ? 0.02 : 0.15,
+              ),
+            ),
+          ),
           Center(
             child: Container(
-              width: MediaQuery.of(context).size.width * 0.45,
+              width: MediaQuery.of(context).size.width * 0.40,
               padding: EdgeInsets.symmetric(
-                vertical: _loadedTheme.innerVerticalPadding * 2.5,
-                horizontal: _loadedTheme.innerHorizontalPadding * 2.5,
+                vertical: _loadedTheme.innerVerticalPadding * 2,
+                horizontal: _loadedTheme.innerHorizontalPadding * 2,
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(
@@ -58,27 +73,32 @@ class _SigninScreenState extends State<SigninScreen> {
                   Padding(
                       padding: EdgeInsets.only(
                           top: _loadedTheme.innerVerticalPadding)),
-                  SettingsTextField(
-                      title: "Email",
+                  AuthTextField(
+                      iconAsset:
+                          'assets/images/lottie/auth-email-icon.rough.json',
+                      iconAssetKeyframes: const [0.0, 0.2, 0.82, 1],
+                      hint: "Email",
                       onEditCallback: (val) {},
                       validationCallback: (val) {
-                        return true;
+                        return false;
                       },
                       textController: TextEditingController()),
-                  SettingsTextField(
-                      title: "Password",
-                      onEditCallback: (val) {},
-                      validationCallback: (val) {
-                        return true;
-                      },
-                      textController: TextEditingController()),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.45,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text("Sign in."),
-                    ),
+                  AuthTextField(
+                    iconAsset:
+                        'assets/images/lottie/auth-password-icon.rough.json',
+                    iconAssetKeyframes: const [0.0, 0.2, 0.4, 0.6],
+                    hint: "Password",
+                    isPasswordField: true,
+                    onEditCallback: (val) {},
+                    validationCallback: (val) {
+                      return false;
+                    },
+                    textController: TextEditingController(),
                   ),
+                  Padding(
+                      padding: EdgeInsets.only(
+                          top: _loadedTheme.innerVerticalPadding)),
+                  AuthButton(),
                 ],
               ),
             ),

@@ -55,7 +55,7 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
     return Padding(
       padding: EdgeInsets.symmetric(),
       child: Container(
-        height: 100,
+        height: 95,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -67,15 +67,17 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
               padding:
                   EdgeInsets.only(top: _loadedTheme.innerVerticalPadding / 4),
             ),
-            TextField(
-              cursorColor: _loadedTheme.accentColor,
-              decoration: InputDecoration(
-                hintText: widget.hint,
-                errorText: _isValid ? null : widget.errorText,
+            SizedBox(
+              child: TextField(
+                cursorColor: _loadedTheme.accentColor,
+                decoration: InputDecoration(
+                  hintText: widget.hint,
+                  errorText: _isValid ? null : widget.errorText,
+                ),
+                controller: widget.textController,
+                onChanged: _onEdit,
+                cursorOpacityAnimates: true,
               ),
-              controller: widget.textController,
-              onChanged: _onEdit,
-              cursorOpacityAnimates: true,
             ),
           ],
         ),
