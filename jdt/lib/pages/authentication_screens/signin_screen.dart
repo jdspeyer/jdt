@@ -1,10 +1,10 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:jdt/pages/authentication_screens/auth_logo.dart';
+import 'package:jdt/pages/authentication_screens/auth_title.dart';
+import 'package:jdt/pages/setting_screen/settings_text_field.dart';
 import 'package:jdt/ui/themes/module_theme.dart';
 import 'package:jdt/ui/themes/theme_manager.dart';
-import 'package:jdt/utils/constants.dart';
-import 'package:rive/components.dart';
-import 'package:rive/rive.dart';
 
 class SigninScreen extends StatefulWidget {
   SigninScreen({super.key});
@@ -35,9 +35,10 @@ class _SigninScreenState extends State<SigninScreen> {
         children: [
           Center(
             child: Container(
+              width: MediaQuery.of(context).size.width * 0.45,
               padding: EdgeInsets.symmetric(
-                vertical: _loadedTheme.innerVerticalPadding,
-                horizontal: _loadedTheme.innerHorizontalPadding,
+                vertical: _loadedTheme.innerVerticalPadding * 2.5,
+                horizontal: _loadedTheme.innerHorizontalPadding * 2.5,
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(
@@ -45,61 +46,38 @@ class _SigninScreenState extends State<SigninScreen> {
                 ),
                 color: Theme.of(context).cardColor,
               ),
-              child: Stack(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        height: 400,
-                        width: 400,
-                        child: RiveAnimation.asset(
-                          logoAssetPath,
-                          artboard: logoArtBoard,
-                          fit: BoxFit.cover,
-                          onInit: (Artboard artboard) {
-                            artboard.forEachComponent((child) {
-                              /// Change logo background to match the page.
-                              if (child is Fill) {
-                                if (child.paint.color == logoBackgroundColor) {
-                                  child.paint.color =
-                                      Theme.of(context).cardColor;
-                                }
-                              }
-
-                              /// Change strokes/ paths of logo to match the current theme.
-                              else if (child is Stroke) {
-                                child.paint.color =
-                                    Theme.of(context).primaryColor;
-                              }
-
-                              /// Remove splash elements
-                              else if (child.name == logoSplashId) {
-                                (child as Node).opacity = 0;
-                              }
-                            });
-                          },
-                        ),
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          text: 'Sign in',
-                          style: Theme.of(context).textTheme.displayLarge,
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: '.',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displayLarge!
-                                    .copyWith(
-                                      color: _loadedTheme.accentColor,
-                                      fontSize:
-                                          _loadedTheme.titleTextFontSize + 4,
-                                    )),
-                          ],
-                        ),
-                      )
-                    ],
+                  Center(child: AuthLogo()),
+                  AuthTitle(title: "Welcome Back"),
+                  Text(
+                    "We're so excited to see you again.",
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(
+                          top: _loadedTheme.innerVerticalPadding)),
+                  SettingsTextField(
+                      title: "Email",
+                      onEditCallback: (val) {},
+                      validationCallback: (val) {
+                        return true;
+                      },
+                      textController: TextEditingController()),
+                  SettingsTextField(
+                      title: "Password",
+                      onEditCallback: (val) {},
+                      validationCallback: (val) {
+                        return true;
+                      },
+                      textController: TextEditingController()),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.45,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text("Sign in."),
+                    ),
                   ),
                 ],
               ),
