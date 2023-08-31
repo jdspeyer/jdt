@@ -94,7 +94,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       iconAsset:
                           'assets/images/lottie/auth-email-icon.rough.json',
                       iconAssetKeyframes: const [0.0, 0.2, 0.82, 1],
-                      hint: "Email",
+                      hint: "Account email",
                       onEditCallback: (val) {},
                       validationCallback: (val) {
                         return true;

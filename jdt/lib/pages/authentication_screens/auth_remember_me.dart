@@ -60,7 +60,7 @@ class _AuthRememberMeState extends State<AuthRememberMe> {
           child: GestureDetector(
             onTap: widget.forgotPasswordCallback,
             child: Text(
-              "Forgot Password?",
+              "Forgot password?",
               style: Theme.of(context).textTheme.titleSmall!.copyWith(
                     color: _loadedTheme.accentColor,
                   ),

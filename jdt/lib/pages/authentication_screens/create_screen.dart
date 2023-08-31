@@ -1,4 +1,3 @@
-import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:jdt/pages/authentication_screens/auth_button.dart';
 import 'package:jdt/pages/authentication_screens/auth_logo.dart';
@@ -27,7 +26,7 @@ class _CreateScreenState extends State<CreateScreen> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
   bool _isLoading = false;
-  String _createAccountText = "Join The Huppo Bloat";
+  String _createAccountText = "Join the Huppo bloat";
 
   _createaccount() async {
     _isLoading = true;
@@ -106,7 +105,7 @@ class _CreateScreenState extends State<CreateScreen> {
                     iconAsset:
                         'assets/images/lottie/auth-password-icon.rough.json',
                     iconAssetKeyframes: const [0.0, 0.2, 0.4, 0.6],
-                    hint: "Confirm Password",
+                    hint: "Confirm password",
                     isPasswordField: true,
                     onEditCallback: (val) {},
                     validationCallback: (val) {
