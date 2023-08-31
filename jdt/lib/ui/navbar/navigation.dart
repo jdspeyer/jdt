@@ -2,6 +2,8 @@
 
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:jdt/pages/authentication_screens/auth_screen.dart';
+import 'package:jdt/pages/authentication_screens/create_screen.dart';
 import 'package:jdt/pages/authentication_screens/signin_screen.dart';
 import 'package:jdt/pages/dashboard_screen.dart';
 import 'package:jdt/pages/home_screen/home_screen.dart';
@@ -74,23 +76,23 @@ class SplashLocation extends BeamLocation {
   List<Pattern> get pathPatterns => [SplashScreen.path];
 }
 
-/* ----------------------------- SigninLocation ----------------------------- */
+/* ----------------------------- AuthenticationLocation ----------------------------- */
 /// TODO: Write comment
-class SigninLocation extends BeamLocation {
+class AuthenticationLocation extends BeamLocation {
   @override
   List<BeamPage> buildPages(
       BuildContext context, RouteInformationSerializable state) {
     final pages = [
       BeamPage(
-        key: ValueKey(SigninScreen.beamLocation),
-        child: SigninScreen(),
+        key: ValueKey(AuthScreen.beamLocation),
+        child: AuthScreen(),
       ),
     ];
     return pages;
   }
 
   @override
-  List<Pattern> get pathPatterns => [SigninScreen.path];
+  List<Pattern> get pathPatterns => [AuthScreen.path];
 }
 
 /* ---------------------------- NoTransitionPage ---------------------------- */

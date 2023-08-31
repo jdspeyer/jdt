@@ -153,6 +153,8 @@ class ModuleTheme {
 
       errorColor: accentColor,
 
+      dividerColor: backgroundColor,
+
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: accentColor,
         selectionColor: accentColor.withOpacity(0.2),

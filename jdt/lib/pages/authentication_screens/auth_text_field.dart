@@ -37,12 +37,12 @@ class AuthTextField extends StatefulWidget {
     String val,
   ) validationCallback;
 
-  FocusNode _node = FocusNode();
   @override
   State<AuthTextField> createState() => _AuthTextFieldState();
 }
 
 class _AuthTextFieldState extends State<AuthTextField> {
+  late FocusNode _node = FocusNode();
   bool _isSelected = false;
   bool _needsReset = false;
   late bool _shouldBlur = widget.isPasswordField;
@@ -65,10 +65,10 @@ class _AuthTextFieldState extends State<AuthTextField> {
 
   @override
   void initState() {
-    widget._node.addListener(() {
+    _node.addListener(() {
       _needsReset = true;
       setState(() {});
-      if (widget._node.hasFocus) {
+      if (_node.hasFocus) {
         _isSelected = true;
         setState(() {});
       } else {
@@ -82,7 +82,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
 
   @override
   void dispose() {
-    widget._node.removeListener(() {});
+    _node.removeListener(() {});
     super.dispose();
   }
 
@@ -91,7 +91,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
     return Padding(
       padding: EdgeInsets.symmetric(),
       child: Container(
-        height: 73,
+        height: 65,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -99,7 +99,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
               height: 60,
               child: TextField(
                 obscureText: _shouldBlur,
-                focusNode: widget._node,
+                focusNode: _node,
                 cursorColor: _loadedTheme.accentColor,
                 decoration: InputDecoration(
                   prefixIcon: TextFieldIcon(

@@ -94,7 +94,7 @@ class _SplashScreenState extends State<SplashScreen>
     _dataManager.markAsLoaded();
 
     /// Beam the user to the dashboard.
-    Beamer.of(context).beamToReplacement(SigninLocation());
+    Beamer.of(context).beamToReplacement(AuthenticationLocation());
   }
 
   /* --------------------------- _dataManagerLoading -------------------------- */

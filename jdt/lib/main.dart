@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:jdt/database/data_manager.dart';
 import 'package:jdt/database/themebox.dart';
 import 'package:jdt/database/userbox.dart';
+import 'package:jdt/pages/authentication_screens/auth_screen.dart';
 import 'package:jdt/pages/authentication_screens/signin_screen.dart';
 import 'package:jdt/pages/dashboard_screen.dart';
 import 'package:jdt/pages/splash_screen/splash_screen.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
     locationBuilder: RoutesLocationBuilder(
       routes: {
         '/splashscreen': (context, state, data) => SplashScreen(),
-        '/signin': (context, state, data) => SigninScreen(),
+        '/authentication': (context, state, data) => AuthScreen(),
         '/dashboard/*': (context, state, data) => DashboardScreen(),
       },
     ),

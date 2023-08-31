@@ -1,24 +1,22 @@
-import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:jdt/pages/authentication_screens/auth_button.dart';
 import 'package:jdt/pages/authentication_screens/auth_logo.dart';
+import 'package:jdt/pages/authentication_screens/auth_remember_me.dart';
+import 'package:jdt/pages/authentication_screens/auth_text_button.dart';
 import 'package:jdt/pages/authentication_screens/auth_text_field.dart';
 import 'package:jdt/pages/authentication_screens/auth_title.dart';
 import 'package:jdt/ui/themes/module_theme.dart';
 import 'package:jdt/ui/themes/theme_manager.dart';
 
 class SigninScreen extends StatefulWidget {
-  SigninScreen({super.key});
+  SigninScreen({
+    super.key,
+    required this.forgotPasswordCallback,
+    required this.createCallback,
+  });
 
-  /// [beamLocation] for navigation to the page.
-  static final beamLocation = BeamPage(
-    key: const ValueKey('signin'),
-    child: SigninScreen(),
-  );
-  final beamerKey = GlobalKey<BeamerState>();
-
-  /// Path Location
-  static const String path = '/splashscreen';
+  VoidCallback forgotPasswordCallback;
+  VoidCallback createCallback;
 
   @override
   State<SigninScreen> createState() => _SigninScreenState();
@@ -27,18 +25,35 @@ class SigninScreen extends StatefulWidget {
 class _SigninScreenState extends State<SigninScreen> {
   final ModuleThemeManager _themeManager = ModuleThemeManager();
   late final ModuleTheme _loadedTheme = _themeManager.currentTheme;
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  String _signInText = "Sign in";
+  bool _rememberCredentials = false;
+
+  _signin() async {
+    _isLoading = true;
+    setState(() {});
+    await Future.delayed(Duration(seconds: 5));
+    _signInText = "Success!";
+    _isLoading = false;
+    setState(() {});
+  }
+
+  _toggleRememberMe() {
+    setState(() {
+      _rememberCredentials = !_rememberCredentials;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(
         children: [
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
-                Radius.circular(_loadedTheme.cardBorderRadius),
-              ),
+              color: Theme.of(context).backgroundColor,
               image: DecorationImage(
                 image: AssetImage('assets/images/Shapes2.png'),
                 fit: BoxFit.cover,
@@ -65,9 +80,9 @@ class _SigninScreenState extends State<SigninScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Center(child: AuthLogo()),
-                  AuthTitle(title: "Welcome Back"),
+                  AuthTitle(title: "Welcome back"),
                   Text(
-                    "We're so excited to see you again.",
+                    "The bloat awaits!",
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   Padding(
@@ -80,9 +95,9 @@ class _SigninScreenState extends State<SigninScreen> {
                       hint: "Email",
                       onEditCallback: (val) {},
                       validationCallback: (val) {
-                        return false;
+                        return true;
                       },
-                      textController: TextEditingController()),
+                      textController: _emailController),
                   AuthTextField(
                     iconAsset:
                         'assets/images/lottie/auth-password-icon.rough.json',
@@ -91,14 +106,33 @@ class _SigninScreenState extends State<SigninScreen> {
                     isPasswordField: true,
                     onEditCallback: (val) {},
                     validationCallback: (val) {
-                      return false;
+                      return true;
                     },
-                    textController: TextEditingController(),
+                    textController: _passwordController,
+                  ),
+                  AuthRememberMe(
+                    remember: _rememberCredentials,
+                    rememberMeCallback: _toggleRememberMe,
+                    forgotPasswordCallback: widget.forgotPasswordCallback,
                   ),
                   Padding(
                       padding: EdgeInsets.only(
-                          top: _loadedTheme.innerVerticalPadding)),
-                  AuthButton(),
+                          top: _loadedTheme.outerVerticalPadding)),
+                  AuthButton(
+                    text: _signInText,
+                    width: MediaQuery.of(context).size.width * 0.45,
+                    isLoading: _isLoading,
+                    height: 45,
+                    callback: _signin,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(
+                          top: _loadedTheme.innerVerticalPadding / 2)),
+                  AuthTextButton(
+                    text: "New here? ",
+                    linkText: "Create a free account.",
+                    callback: widget.createCallback,
+                  ),
                 ],
               ),
             ),
