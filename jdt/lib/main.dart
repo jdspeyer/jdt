@@ -1,6 +1,11 @@
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jdt/amplifyconfiguration.dart';
 import 'package:jdt/database/data_manager.dart';
 import 'package:jdt/database/themebox.dart';
 import 'package:jdt/database/userbox.dart';
@@ -14,6 +19,7 @@ import 'package:jdt/utils/app_window_manager.dart';
 
 void main() async {
   await Hive.initFlutter();
+
   Hive.registerAdapter(ThemeBoxAdapter());
   Hive.registerAdapter(UserBoxAdapter());
 
@@ -22,7 +28,14 @@ void main() async {
   await window.setup();
   await manager.initialize();
 
-  runApp(MyApp());
+  // Create the Auth plugin.
+  final auth = AmplifyAuthCognito();
+
+  // Add the plugins and configure Amplify for your app.
+  await Amplify.addPlugins([auth]);
+  await Amplify.configure(amplifyconfig);
+
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

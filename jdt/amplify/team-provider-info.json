@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-huppo-dev-215342-authRole",
+      "UnauthRoleArn": "arn:aws:iam::002203940438:role/amplify-huppo-dev-215342-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::002203940438:role/amplify-huppo-dev-215342-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-huppo-dev-215342-deployment",
+      "UnauthRoleName": "amplify-huppo-dev-215342-unauthRole",
+      "StackName": "amplify-huppo-dev-215342",
+      "StackId": "arn:aws:cloudformation:us-east-1:002203940438:stack/amplify-huppo-dev-215342/25f3b550-487b-11ee-bc5c-0e2be6be06d5",
+      "AmplifyAppId": "d2bdnb6tnj40ci"
+    },
+    "categories": {
+      "auth": {
+        "huppo": {}
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:jdt/pages/authentication_screens/auth_screen.dart';
 import 'package:jdt/pages/authentication_screens/create_screen.dart';
 import 'package:jdt/pages/authentication_screens/signin_screen.dart';
+import 'package:jdt/pages/authentication_screens/verify_email_screen.dart';
 import 'package:jdt/pages/dashboard_screen.dart';
 import 'package:jdt/pages/home_screen/home_screen.dart';
 import 'package:jdt/pages/setting_screen/settings_screen.dart';
@@ -93,6 +94,25 @@ class AuthenticationLocation extends BeamLocation {
 
   @override
   List<Pattern> get pathPatterns => [AuthScreen.path];
+}
+
+/* ----------------------------- AuthenticationLocation ----------------------------- */
+/// TODO: Write comment
+class VerifyEmailLocation extends BeamLocation {
+  @override
+  List<BeamPage> buildPages(
+      BuildContext context, RouteInformationSerializable state) {
+    final pages = [
+      BeamPage(
+        key: ValueKey(VerifyEmailScreen.beamLocation),
+        child: VerifyEmailScreen(),
+      ),
+    ];
+    return pages;
+  }
+
+  @override
+  List<Pattern> get pathPatterns => [VerifyEmailScreen.path];
 }
 
 /* ---------------------------- NoTransitionPage ---------------------------- */

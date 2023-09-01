@@ -1,8 +1,13 @@
 // ignore_for_file: deprecated_member_use, use_build_context_synchronously
 
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jdt/amplifyconfiguration.dart';
 import 'package:jdt/database/data_manager.dart';
+import 'package:jdt/providers/user_provider.dart';
 import 'package:jdt/ui/navbar/navigation.dart';
 import 'package:jdt/pages/splash_screen/animated_logo.dart';
 import 'package:jdt/utils/app_window_manager.dart';
@@ -51,6 +56,8 @@ class _SplashScreenState extends State<SplashScreen>
   /// The hippo animation
   final AnimatedLogo _logo = AnimatedLogo();
 
+  late FutureProvider<AuthUser?> currentUser;
+
   /// The current loading process of the page.
   /// Range: 0-1
   double _loadingProgress = 0.0;
@@ -62,24 +69,12 @@ class _SplashScreenState extends State<SplashScreen>
     await _dataManagerLoading();
     await _assetLoading();
     await _windowManagerLoading();
-    await _updateChecking();
+    bool authStatus = await _updateChecking();
 
     /// Loading is now completed! We can tell the user as such.
     setState(() {
-      if (_dataManager.getUserFromStorage().getProfileEditCompletion() < 0.1) {
-        _loadingTitle = 'Welcome to Huppo!';
-        _loadingMessage = "You're going to love it here :)";
-      } else {
-        if (_dataManager.getUserFromStorage().firstName.length > 10) {
-          _loadingTitle =
-              'Welcome back ${_dataManager.getUserFromStorage().firstName.substring(0, 9)}...!';
-        } else {
-          _loadingTitle =
-              'Welcome back ${_dataManager.getUserFromStorage().firstName}!';
-        }
-
-        _loadingMessage = "Did you miss me?";
-      }
+      _loadingTitle = 'Welcome to Huppo!';
+      _loadingMessage = "You're going to love it here :)";
     });
 
     /// Animate to the blank page
@@ -93,8 +88,13 @@ class _SplashScreenState extends State<SplashScreen>
 
     _dataManager.markAsLoaded();
 
-    /// Beam the user to the dashboard.
-    Beamer.of(context).beamToReplacement(AuthenticationLocation());
+    if (authStatus) {
+      /// Beam the user to the dashboard.
+      Beamer.of(context).beamToReplacement(DashboardLocation());
+    } else {
+      /// Beam the user to the auth screen.
+      Beamer.of(context).beamToReplacement(AuthenticationLocation());
+    }
   }
 
   /* --------------------------- _dataManagerLoading -------------------------- */
@@ -114,11 +114,22 @@ class _SplashScreenState extends State<SplashScreen>
   /// Loads in large web assets that were not bundled with the application and other
   /// asset related loading processes.
   _assetLoading() async {
-    setState(() {
-      _loadingProgress = 0.50;
-      _loadingMessage = "Loading assets...";
-    });
-    await Future.delayed(const Duration(milliseconds: 1500));
+    try {
+      setState(() {
+        _loadingMessage = "Loading assets...";
+      });
+
+      // Success
+      safePrint('Successfully configured');
+      setState(() {
+        _loadingProgress = 0.50;
+      });
+    } on Exception catch (e) {
+      _loadingProgress = 0.0;
+      _loadingMessage = "Loading Failed.";
+      // Failure
+      safePrint('Error configuring Amplify: $e');
+    }
   }
 
   /* -------------------------- _windowManagerLoading ------------------------- */
@@ -137,12 +148,35 @@ class _SplashScreenState extends State<SplashScreen>
   /// is closer to its first release.
   ///
   /// TODO: Finish method and comment.
-  _updateChecking() async {
+  Future<bool> _updateChecking() async {
+    setState(() {
+      _loadingMessage = "Checking authentication...";
+    });
+
+    /// 1.) Has the user logged in before and used the remember me feature? If so, this will attempt to log them in using those
+    /// credentials.
+    if (_hasSavedCredentials()) {
+      /// Try login
+    }
+
+    /// 2.) Either the saved credentials did not work, they are already logged in, or they dont have an account.
+    currentUser = authUserProvider;
+
     setState(() {
       _loadingProgress = 1;
-      _loadingMessage = "Checking for updates...";
     });
-    await Future.delayed(const Duration(milliseconds: 500));
+
+    /// 3.) The user is not signed in, return false
+    if (currentUser.argument == null) {
+      /// Has the user signed in previously? Do they have credentials saved on their machine?
+      return false;
+    }
+
+    return true;
+  }
+
+  bool _hasSavedCredentials() {
+    return false;
   }
 
   /* -------------------------------- initState ------------------------------- */

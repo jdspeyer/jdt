@@ -33,6 +33,8 @@ dependencies:
   confetti: ^0.7.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  flutter_hooks: ^0.20.1
+  hooks_riverpod: ^2.3.10
   window_manager: ^0.3.5
   rive: ^0.11.14
   lottie: ^2.6.0
@@ -45,6 +47,10 @@ dependencies:
   flutter_svg: ^2.0.7
   flutter:
     sdk: flutter
+  amplify_api: ^1.0.0
+  amplify_auth_cognito: ^1.0.0
+  amplify_authenticator: ^1.0.0
+  amplify_flutter: ^1.0.0
 
 
   # The following adds the Cupertino Icons font to your application.

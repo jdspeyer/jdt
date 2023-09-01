@@ -1,4 +1,7 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:jdt/ui/icons/text_field_icon.dart';
 import 'package:jdt/ui/themes/module_theme.dart';
 import 'package:jdt/ui/themes/theme_manager.dart';
@@ -8,9 +11,9 @@ class AuthTextField extends StatefulWidget {
     super.key,
     this.hint = "Hint",
     this.initialValue = "",
-    this.errorText = "Error",
-    required this.iconAsset,
-    required this.iconAssetKeyframes,
+    this.errorText = "",
+    this.iconAsset = 'assets/images/lottie/auth-hide-icon.rough.json',
+    this.iconAssetKeyframes = const [0.8, 1, 0.8, 1],
     this.isPasswordField = false,
     this.unblurIconAsset = 'assets/images/lottie/auth-hide-icon.rough.json',
     this.unblurIconAssetKeyframes = const [0.8, 1, 0.8, 1],
@@ -42,7 +45,9 @@ class AuthTextField extends StatefulWidget {
 }
 
 class _AuthTextFieldState extends State<AuthTextField> {
-  late FocusNode _node = FocusNode();
+  /// Decoration used for when [showIcon] is true.
+
+  late final FocusNode _node = FocusNode();
   bool _isSelected = false;
   bool _needsReset = false;
   late bool _shouldBlur = widget.isPasswordField;
@@ -52,15 +57,8 @@ class _AuthTextFieldState extends State<AuthTextField> {
   late bool _isValid = true;
 
   _onEdit(String val) {
-    if (widget.validationCallback(widget.textController.text)) {
-      _isValid = true;
-      setState(() {});
-
-      widget.onEditCallback(widget.textController.text);
-    } else {
-      _isValid = false;
-      setState(() {});
-    }
+    widget.onEditCallback(widget.textController.text);
+    setState(() {});
   }
 
   @override
@@ -88,60 +86,57 @@ class _AuthTextFieldState extends State<AuthTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(),
-      child: Container(
-        height: 65,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 60,
-              child: TextField(
-                obscureText: _shouldBlur,
-                focusNode: _node,
-                cursorColor: _loadedTheme.accentColor,
-                decoration: InputDecoration(
-                  prefixIcon: TextFieldIcon(
-                    asset: widget.iconAsset,
-                    introStartKeyFrame: widget.iconAssetKeyframes[0],
-                    introEndKeyFrame: widget.iconAssetKeyframes[1],
-                    hoverStartKeyFrame: widget.iconAssetKeyframes[2],
-                    hoverEndKeyFrame: widget.iconAssetKeyframes[3],
-                    isSelected: _isSelected,
-                    needsReset: _needsReset,
-                    canTap: false,
-                  ),
-                  suffixIcon: Opacity(
-                    opacity: (widget.isPasswordField) ? 1.0 : 0.0,
-                    child: AbsorbPointer(
-                      absorbing: !widget.isPasswordField,
-                      child: TextFieldIcon(
-                        canTap: true,
-                        asset: widget.unblurIconAsset,
-                        introStartKeyFrame: widget.unblurIconAssetKeyframes[0],
-                        introEndKeyFrame: widget.unblurIconAssetKeyframes[1],
-                        hoverStartKeyFrame: widget.unblurIconAssetKeyframes[2],
-                        hoverEndKeyFrame: widget.unblurIconAssetKeyframes[3],
-                        isSelected: _shouldBlur,
-                        tapCallback: () {
-                          setState(() {
-                            _shouldBlur = !_shouldBlur;
-                          });
-                        },
-                      ),
+    return SizedBox(
+      height: 65,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 60,
+            child: TextFormField(
+              obscureText: _shouldBlur,
+              focusNode: _node,
+              cursorColor: _loadedTheme.accentColor,
+              decoration: InputDecoration(
+                counterText: "",
+                prefixIcon: TextFieldIcon(
+                  asset: widget.iconAsset,
+                  introStartKeyFrame: widget.iconAssetKeyframes[0],
+                  introEndKeyFrame: widget.iconAssetKeyframes[1],
+                  hoverStartKeyFrame: widget.iconAssetKeyframes[2],
+                  hoverEndKeyFrame: widget.iconAssetKeyframes[3],
+                  isSelected: _isSelected,
+                  needsReset: _needsReset,
+                  canTap: false,
+                ),
+                suffixIcon: Opacity(
+                  opacity: (widget.isPasswordField) ? 1.0 : 0.0,
+                  child: AbsorbPointer(
+                    absorbing: !widget.isPasswordField,
+                    child: TextFieldIcon(
+                      canTap: true,
+                      asset: widget.unblurIconAsset,
+                      introStartKeyFrame: widget.unblurIconAssetKeyframes[0],
+                      introEndKeyFrame: widget.unblurIconAssetKeyframes[1],
+                      hoverStartKeyFrame: widget.unblurIconAssetKeyframes[2],
+                      hoverEndKeyFrame: widget.unblurIconAssetKeyframes[3],
+                      isSelected: _shouldBlur,
+                      tapCallback: () {
+                        setState(() {
+                          _shouldBlur = !_shouldBlur;
+                        });
+                      },
                     ),
                   ),
-                  hintText: widget.hint,
-                  errorText: _isValid ? null : widget.errorText,
                 ),
-                controller: widget.textController,
-                onChanged: _onEdit,
-                cursorOpacityAnimates: true,
+                hintText: widget.hint,
+                errorText: widget.errorText.isEmpty ? null : widget.errorText,
               ),
+              controller: widget.textController,
+              onChanged: _onEdit,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

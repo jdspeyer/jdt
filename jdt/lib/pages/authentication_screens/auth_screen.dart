@@ -1,7 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:jdt/pages/authentication_screens/create_screen.dart';
-import 'package:jdt/pages/authentication_screens/forgot_password.dart';
+import 'package:jdt/pages/authentication_screens/forgot_password_screen.dart';
 import 'package:jdt/pages/authentication_screens/signin_screen.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 

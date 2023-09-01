@@ -68,7 +68,7 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
                   EdgeInsets.only(top: _loadedTheme.innerVerticalPadding / 4),
             ),
             SizedBox(
-              child: TextField(
+              child: TextFormField(
                 cursorColor: _loadedTheme.accentColor,
                 decoration: InputDecoration(
                   hintText: widget.hint,
@@ -76,7 +76,7 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
                 ),
                 controller: widget.textController,
                 onChanged: _onEdit,
-                cursorOpacityAnimates: true,
+                //cursorOpacityAnimates: true,
               ),
             ),
           ],
