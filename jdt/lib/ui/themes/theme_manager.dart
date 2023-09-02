@@ -1,7 +1,7 @@
-/* ------------------------------ ModuleThemeManager ------------------------------ */
 import 'package:flutter/material.dart';
 import 'package:jdt/ui/themes/module_theme.dart';
 
+/* ------------------------------ ModuleThemeManager ------------------------------ */
 /// Manages the applications appearance and themes.
 class ModuleThemeManager {
   /// The Global ThemeManager Instance

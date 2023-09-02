@@ -1,8 +1,12 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
-import 'package:jdt/ui/icons/jdt_icon.dart';
 import 'package:jdt/ui/icons/generic_icon.dart';
 import 'package:jdt/ui/navbar/side_navbar_item_def.dart';
 
+/* ----------------------------- SideNavbarItem ----------------------------- */
+/// The widget representation of the [SideNavbar] options that the user can tap
+/// to navigate to a specific page.
 class SideNavbarItem extends StatefulWidget {
   SideNavbarItem({
     super.key,
@@ -10,7 +14,10 @@ class SideNavbarItem extends StatefulWidget {
     required this.clearNavSelection,
   });
 
+  /// The class used to model the data stored in this widget.
   SideNavbarItemDef definition;
+
+  /// Callback refered to when the item is clicked on.
   final void Function(String) clearNavSelection;
 
   @override
@@ -18,13 +25,17 @@ class SideNavbarItem extends StatefulWidget {
 }
 
 class _SideNavbarItemState extends State<SideNavbarItem> {
+  /* ------------------------------ _iconSelected ----------------------------- */
+  /// Runs once the icon has been selected by the user.
   _iconSelected() {
     setState(() {
+      /// Run the clear navigation callback with the provided route of the [SideNavbarItemDef]
       widget.clearNavSelection(widget.definition.route);
       widget.definition.isSelected = true;
     });
   }
 
+  /* ---------------------------------- build --------------------------------- */
   @override
   Widget build(BuildContext context) {
     return GenericIcon(

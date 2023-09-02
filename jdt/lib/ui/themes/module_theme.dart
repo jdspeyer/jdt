@@ -1,8 +1,9 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
+/* ------------------------------- ModuleTheme ------------------------------ */
+/// The class definition of a module. This can be read directly using the [ModuleThemeManager]
+/// or can be converted to [ThemeData].
 class ModuleTheme {
   ModuleTheme({
     /// General Theme Information
@@ -268,6 +269,7 @@ class ModuleTheme {
         thickness: 2,
       ),
 
+      /* ------------------------------- Text Fields ------------------------------ */
       inputDecorationTheme: InputDecorationTheme(
         /// Generic
         border: OutlineInputBorder(
@@ -298,6 +300,7 @@ class ModuleTheme {
           borderRadius: BorderRadius.all(Radius.circular(cardBorderRadius)),
         ),
 
+        /// Typing Borde
         focusedErrorBorder: OutlineInputBorder(
           borderSide: BorderSide(color: accentColor),
           borderRadius: BorderRadius.all(
@@ -322,11 +325,12 @@ class ModuleTheme {
         ),
         fillColor: textFieldBackgroundColor,
         contentPadding: EdgeInsets.all(innerHorizontalPadding),
-        constraints: BoxConstraints(
+        constraints: const BoxConstraints(
           minHeight: 50,
         ),
       ),
 
+      /* ---------------------------- Elevated Buttons ---------------------------- */
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           disabledBackgroundColor: accentColor.withOpacity(0.3),

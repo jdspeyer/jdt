@@ -1,6 +1,9 @@
+// ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:jdt/ui/themes/theme_manager.dart';
 
+/* ------------------------------- JdtDivider ------------------------------- */
+/// A custom divider used throughout the application. Has rounded borders!
 class JdtDivider extends StatelessWidget {
   JdtDivider({
     super.key,
@@ -8,11 +11,13 @@ class JdtDivider extends StatelessWidget {
     this.belowPadding = 0.0,
   });
 
+  /// Padding above/below the divider
   double abovePadding;
   double belowPadding;
 
-  ModuleThemeManager _themeManager = ModuleThemeManager();
+  final ModuleThemeManager _themeManager = ModuleThemeManager();
 
+  /* ---------------------------------- build --------------------------------- */
   @override
   Widget build(BuildContext context) {
     return Padding(
