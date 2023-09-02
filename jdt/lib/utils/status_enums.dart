@@ -14,3 +14,12 @@ enum CreateStatus {
 }
 
 enum VerifyStatus { incorrect, success }
+
+enum ResetPasswordStatus {
+  samePasswordError,
+  invalidPasswordError,
+  invalidCodeError,
+  unknownError,
+  limitReachedError,
+  success,
+}

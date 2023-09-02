@@ -1,8 +1,12 @@
+// ignore_for_file: unused_result
+
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jdt/database/data_manager.dart';
+import 'package:jdt/database/jdt_user.dart';
 import 'package:jdt/pages/authentication_screens/auth_button.dart';
 import 'package:jdt/pages/authentication_screens/auth_logo.dart';
+import 'package:jdt/pages/authentication_screens/auth_remember_me.dart';
 import 'package:jdt/pages/authentication_screens/auth_text_button.dart';
 import 'package:jdt/pages/authentication_screens/auth_text_field.dart';
 import 'package:jdt/pages/authentication_screens/auth_title.dart';
@@ -10,95 +14,113 @@ import 'package:jdt/providers/aws_auth_provider.dart';
 import 'package:jdt/ui/navbar/navigation.dart';
 import 'package:jdt/ui/themes/module_theme.dart';
 import 'package:jdt/ui/themes/theme_manager.dart';
+import 'package:jdt/providers/user_provider.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jdt/utils/status_enums.dart';
 
-class CreateScreen extends ConsumerStatefulWidget {
-  CreateScreen({
+class SigninScreen extends ConsumerStatefulWidget {
+  SigninScreen({
     super.key,
-    required this.signinCallback,
+    required this.forgotPasswordCallback,
+    required this.createCallback,
   });
 
-  VoidCallback signinCallback;
+  VoidCallback forgotPasswordCallback;
+  VoidCallback createCallback;
 
   @override
-  ConsumerState<CreateScreen> createState() => _CreateScreenState();
+  ConsumerState<SigninScreen> createState() => _SigninScreenState();
 }
 
-class _CreateScreenState extends ConsumerState<CreateScreen> {
+class _SigninScreenState extends ConsumerState<SigninScreen> {
   final ModuleThemeManager _themeManager = ModuleThemeManager();
   late final ModuleTheme _loadedTheme = _themeManager.currentTheme;
+
+  /// Gets the singleton [DataManager]
+  final DataManager _dataManager = DataManager();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  TextEditingController _confirmPasswordController = TextEditingController();
   bool _isLoading = false;
+  String _signInText = "Sign in";
+  String _errorText = "";
+  bool _rememberCredentials = false;
   bool _success = false;
-  String _createAccountText = "Join the Huppo bloat";
-  String _emailErrorText = "";
-  String _passwordErrorText = "";
 
-  _createaccount() async {
+  _signin() async {
     _isLoading = true;
     setState(() {});
-
-    if (_passwordController.text != _confirmPasswordController.text) {
-      _createAccountText = "Join the Huppo bloat";
-      _passwordErrorText = "Passwords do not match.";
-      _isLoading = false;
-      return;
-    }
-
     final authAWSRepo = ref.read(authAWSRepositoryProvider);
-    CreateStatus status = await authAWSRepo.signUp(
+    LoginStatus status = await authAWSRepo.signIn(
         _emailController.text, _passwordController.text);
     ref.refresh(authAWSRepositoryProvider);
 
     switch (status) {
-      case CreateStatus.emailTakenError:
-        _createAccountText = "Join the Huppo bloat";
-        _emailErrorText = "Email is already in use.";
+      case LoginStatus.accountDoesNotExistError:
+        _signInText = "Sign in";
+        _errorText = "Email does not exist.";
         break;
-      case CreateStatus.invalidPasswordError:
-        _createAccountText = "Join the Huppo bloat";
-        _passwordErrorText = "Password must be 6 characters.";
+      case LoginStatus.wrongCredentialsError:
+        _signInText = "Sign in";
+        _errorText = "Email or password was incorrect.";
         break;
-      case CreateStatus.unknownError:
-        _createAccountText = "Join the Huppo bloat";
-        _emailErrorText = "Unknown error occured.";
+      case LoginStatus.unknownError:
+        _signInText = "Sign in";
+        _errorText = "Unknown error occured.";
         break;
-      case CreateStatus.success:
-        _createAccountText = "Success!";
-        _emailErrorText = "";
+      case LoginStatus.success:
+        _signInText = "Success!";
+        _errorText = "";
+        break;
+      case LoginStatus.unconfirmedError:
+        _signInText = "Success!";
+        _errorText = "";
+        break;
       default:
     }
 
+    _isLoading = false;
     setState(() {});
 
-    if (status == CreateStatus.success) {
-      try {
-        _isLoading = false;
-        _success = true;
-        setState(() {});
-        await Future.delayed(Duration(seconds: 1));
-        Beamer.of(context).beamToReplacement(VerifyEmailLocation());
-      } catch (e) {
-        _isLoading = false;
-        _success = false;
-        _createAccountText = "Join the Huppo bloat";
-        setState(() {});
-      }
+    if (status == LoginStatus.unconfirmedError) {
+      _success = true;
+      setState(() {});
+      _dataManager.saveUserToStorage(JdtUser(
+          email: _emailController.text,
+          password: _passwordController.text,
+          rememberMe: _rememberCredentials));
+      await Future.delayed(Duration(seconds: 1));
+      Beamer.of(context).beamToReplacement(VerifyEmailLocation());
     }
+
+    if (status == LoginStatus.success) {
+      _success = true;
+      setState(() {});
+      _dataManager.saveUserToStorage(JdtUser(
+          email: _emailController.text,
+          password: _passwordController.text,
+          rememberMe: _rememberCredentials));
+      print(_dataManager.getUserFromStorage().email);
+      await Future.delayed(Duration(seconds: 1));
+      Beamer.of(context).beamToReplacement(DashboardLocation());
+    }
+  }
+
+  _toggleRememberMe() {
+    setState(() {
+      _rememberCredentials = !_rememberCredentials;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AbsorbPointer(
-        absorbing: _success,
+        absorbing: (_success || _isLoading),
         child: Stack(
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
+                color: Theme.of(context).backgroundColor,
                 image: DecorationImage(
                   image: AssetImage('assets/images/Shapes2.png'),
                   fit: BoxFit.cover,
@@ -126,9 +148,9 @@ class _CreateScreenState extends ConsumerState<CreateScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Center(child: AuthLogo()),
-                    AuthTitle(title: "Create account"),
+                    AuthTitle(title: "Welcome back"),
                     Text(
-                      "We're so excited to have you in our bloat!",
+                      "The bloat awaits!",
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                     Padding(
@@ -139,7 +161,7 @@ class _CreateScreenState extends ConsumerState<CreateScreen> {
                             'assets/images/lottie/auth-email-icon.rough.json',
                         iconAssetKeyframes: const [0.0, 0.2, 0.82, 1],
                         hint: "Email",
-                        errorText: _emailErrorText,
+                        errorText: _errorText,
                         onEditCallback: (val) {},
                         validationCallback: (val) {
                           return true;
@@ -150,7 +172,6 @@ class _CreateScreenState extends ConsumerState<CreateScreen> {
                           'assets/images/lottie/auth-password-icon.rough.json',
                       iconAssetKeyframes: const [0.0, 0.2, 0.4, 0.6],
                       hint: "Password",
-                      errorText: _passwordErrorText,
                       isPasswordField: true,
                       onEditCallback: (val) {},
                       validationCallback: (val) {
@@ -158,35 +179,28 @@ class _CreateScreenState extends ConsumerState<CreateScreen> {
                       },
                       textController: _passwordController,
                     ),
-                    AuthTextField(
-                      iconAsset:
-                          'assets/images/lottie/auth-password-icon.rough.json',
-                      iconAssetKeyframes: const [0.0, 0.2, 0.4, 0.6],
-                      hint: "Confirm password",
-                      isPasswordField: true,
-                      onEditCallback: (val) {},
-                      validationCallback: (val) {
-                        return true;
-                      },
-                      textController: _confirmPasswordController,
+                    AuthRememberMe(
+                      remember: _rememberCredentials,
+                      rememberMeCallback: _toggleRememberMe,
+                      forgotPasswordCallback: widget.forgotPasswordCallback,
                     ),
                     Padding(
                         padding: EdgeInsets.only(
                             top: _loadedTheme.outerVerticalPadding)),
                     AuthButton(
-                      text: _createAccountText,
+                      text: _signInText,
                       width: MediaQuery.of(context).size.width * 0.45,
                       isLoading: _isLoading,
                       height: 45,
-                      callback: _createaccount,
+                      callback: _signin,
                     ),
                     Padding(
                         padding: EdgeInsets.only(
                             top: _loadedTheme.innerVerticalPadding / 2)),
                     AuthTextButton(
-                      text: "Already in the bloat? ",
-                      linkText: "Sign in.",
-                      callback: widget.signinCallback,
+                      text: "New here? ",
+                      linkText: "Create a free account.",
+                      callback: widget.createCallback,
                     ),
                   ],
                 ),

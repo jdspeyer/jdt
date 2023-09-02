@@ -2,19 +2,21 @@ import 'package:jdt/database/data_manager.dart';
 
 class JdtUser {
   JdtUser({
-    required this.firstName,
-    required this.lastName,
+    this.firstName = "",
+    this.lastName = "",
     required this.email,
-    required this.shareEmail,
-    required this.phoneNumber,
-    required this.sharePhoneNumber,
-    required this.allowNotifications,
-    required this.hasEditedFirstName,
-    required this.hasEditedLastName,
-    required this.hasEditedEmail,
-    required this.hasEditedPhoneNumber,
-    required this.hasEditedToggleSettings,
-    required this.hasFinishedProfileSetup,
+    this.shareEmail = false,
+    this.phoneNumber = 0,
+    this.sharePhoneNumber = false,
+    this.allowNotifications = false,
+    this.hasEditedFirstName = false,
+    this.hasEditedLastName = false,
+    this.hasEditedEmail = false,
+    this.hasEditedPhoneNumber = false,
+    this.hasEditedToggleSettings = false,
+    this.hasFinishedProfileSetup = false,
+    required this.password,
+    required this.rememberMe,
   });
 
   String firstName;
@@ -31,6 +33,8 @@ class JdtUser {
   bool hasEditedPhoneNumber;
   bool hasEditedToggleSettings;
   bool hasFinishedProfileSetup;
+  bool rememberMe;
+  String password;
 
   double getProfileEditCompletion() {
     double completionAmount = 0.0;

@@ -5,13 +5,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jdt/pages/authentication_screens/auth_button.dart';
 import 'package:jdt/pages/authentication_screens/auth_text_button.dart';
-import 'package:jdt/pages/authentication_screens/auth_text_field_mini.dart';
 import 'package:jdt/pages/authentication_screens/auth_title.dart';
 import 'package:jdt/providers/aws_auth_provider.dart';
 import 'package:jdt/ui/navbar/navigation.dart';
 import 'package:jdt/ui/themes/module_theme.dart';
 import 'package:jdt/ui/themes/theme_manager.dart';
 import 'package:jdt/utils/status_enums.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
   VerifyEmailScreen({
@@ -37,33 +37,21 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   late final ModuleTheme _loadedTheme = _themeManager.currentTheme;
   final TextEditingController _confirmEmailController0 =
       TextEditingController();
-  final TextEditingController _confirmEmailController1 =
-      TextEditingController();
-  final TextEditingController _confirmEmailController2 =
-      TextEditingController();
-  final TextEditingController _confirmEmailController3 =
-      TextEditingController();
-  final TextEditingController _confirmEmailController4 =
-      TextEditingController();
-  final TextEditingController _confirmEmailController5 =
-      TextEditingController();
+  String confirmEmailCode = "";
 
   bool _isLoading = false;
   String _createAccountText = "Verify email";
   bool _isSuccess = false;
 
   _getCode() {
-    return "${_confirmEmailController0.text}${_confirmEmailController1.text}${_confirmEmailController2.text}${_confirmEmailController3.text}${_confirmEmailController4.text}${_confirmEmailController5.text}";
+    return confirmEmailCode;
   }
 
   _confirmEmail() async {
     _isLoading = true;
     setState(() {});
     final authAWSRepo = ref.read(authAWSRepositoryProvider);
-    final user = await Amplify.Auth.getCurrentUser();
-    String email = (user == null) ? "" : user.username;
-    print(email);
-    VerifyStatus status = await authAWSRepo.confirmSignUp(email, _getCode());
+    VerifyStatus status = await authAWSRepo.confirmSignUp(_getCode());
     ref.refresh(authAWSRepositoryProvider);
 
     if (status == VerifyStatus.incorrect) {
@@ -81,11 +69,31 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     Beamer.of(context).beamToReplacement(DashboardLocation());
   }
 
+  _resendEmail() async {
+    _isLoading = true;
+    setState(() {});
+    final authAWSRepo = ref.read(authAWSRepositoryProvider);
+    VerifyStatus status = await authAWSRepo.resendConfirmSignUpEmail();
+    ref.refresh(authAWSRepositoryProvider);
+
+    if (status == VerifyStatus.incorrect) {
+      _createAccountText = "Error sending code";
+      _isLoading = false;
+      setState(() {});
+      return;
+    }
+
+    _createAccountText = "Code sent";
+    _isLoading = false;
+    setState(() {});
+    return;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AbsorbPointer(
-        absorbing: _isSuccess,
+        absorbing: (_isSuccess || _isLoading),
         child: Stack(
           children: [
             Container(
@@ -136,104 +144,32 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                             top: _loadedTheme.innerVerticalPadding)),
 
                     /* ------------------------------- EMAIL FORM ------------------------------- */
-                    Form(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            child: AuthTextFieldMini(
-                                showIcon: false,
-                                isCentered: true,
-                                useCharacterLimit: true,
-                                hint: "",
-                                onEditCallback: (val) {},
-                                validationCallback: (val) {
-                                  return true;
-                                },
-                                textController: _confirmEmailController0),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                right: _loadedTheme.innerHorizontalPadding),
-                          ),
-                          Expanded(
-                            child: AuthTextFieldMini(
-                                showIcon: false,
-                                isCentered: true,
-                                useCharacterLimit: true,
-                                hint: "",
-                                onEditCallback: (val) {},
-                                validationCallback: (val) {
-                                  return true;
-                                },
-                                textController: _confirmEmailController1),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                right: _loadedTheme.innerHorizontalPadding),
-                          ),
-                          Expanded(
-                            child: AuthTextFieldMini(
-                                showIcon: false,
-                                isCentered: true,
-                                useCharacterLimit: true,
-                                hint: "",
-                                onEditCallback: (val) {},
-                                validationCallback: (val) {
-                                  return true;
-                                },
-                                textController: _confirmEmailController2),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                right: _loadedTheme.innerHorizontalPadding),
-                          ),
-                          Expanded(
-                            child: AuthTextFieldMini(
-                                showIcon: false,
-                                isCentered: true,
-                                useCharacterLimit: true,
-                                hint: "",
-                                onEditCallback: (val) {},
-                                validationCallback: (val) {
-                                  return true;
-                                },
-                                textController: _confirmEmailController3),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                right: _loadedTheme.innerHorizontalPadding),
-                          ),
-                          Expanded(
-                            child: AuthTextFieldMini(
-                                showIcon: false,
-                                isCentered: true,
-                                useCharacterLimit: true,
-                                hint: "",
-                                onEditCallback: (val) {},
-                                validationCallback: (val) {
-                                  return true;
-                                },
-                                textController: _confirmEmailController4),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                right: _loadedTheme.innerHorizontalPadding),
-                          ),
-                          Expanded(
-                            child: AuthTextFieldMini(
-                                showIcon: false,
-                                isCentered: true,
-                                useCharacterLimit: true,
-                                hint: "",
-                                onEditCallback: (val) {},
-                                validationCallback: (val) {
-                                  return true;
-                                },
-                                textController: _confirmEmailController5),
-                          ),
-                        ],
+                    PinCodeTextField(
+                      appContext: context,
+                      length: 6,
+                      obscureText: false,
+                      animationType: AnimationType.fade,
+                      pinTheme: PinTheme(
+                        selectedColor: _loadedTheme.accentColor,
+                        inactiveColor: _loadedTheme.textColor.withOpacity(0.3),
+                        errorBorderColor: _loadedTheme.accentColor,
+                        activeColor: _loadedTheme.textColor.withOpacity(0.3),
+                        shape: PinCodeFieldShape.box,
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(_loadedTheme.cardBorderRadius)),
+                        activeFillColor: Colors.white,
                       ),
+                      textStyle: Theme.of(context).textTheme.titleMedium,
+                      animationDuration: Duration(milliseconds: 300),
+                      enableActiveFill: false,
+                      controller: _confirmEmailController0,
+                      onCompleted: (v) {},
+                      onChanged: (value) {
+                        setState(() {
+                          confirmEmailCode = value;
+                          _createAccountText = "Verify email";
+                        });
+                      },
                     ),
                     Padding(
                         padding: EdgeInsets.only(
@@ -254,7 +190,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                         AuthTextButton(
                           text: "Didn't get an email?",
                           linkText: " Resend code.",
-                          callback: () {},
+                          callback: _resendEmail,
                         ),
                         Padding(
                             padding: EdgeInsets.only(
@@ -273,7 +209,10 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                 child: AuthTextButton(
                   text: "",
                   linkText: "Sign out.",
-                  callback: () {},
+                  callback: () {
+                    Beamer.of(context)
+                        .beamToReplacement(AuthenticationLocation());
+                  },
                 ),
               ),
             ),

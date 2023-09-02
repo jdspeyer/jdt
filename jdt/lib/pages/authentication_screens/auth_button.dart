@@ -10,6 +10,7 @@ class AuthButton extends StatefulWidget {
     required this.isLoading,
     required this.callback,
     this.text = "Sign in",
+    this.isDisabled = false,
     this.duration = const Duration(milliseconds: 450),
   });
 
@@ -18,6 +19,7 @@ class AuthButton extends StatefulWidget {
   double height;
   Duration duration;
   bool isLoading;
+  bool isDisabled;
   VoidCallback callback;
 
   @override
@@ -62,9 +64,11 @@ class _AuthButtonState extends State<AuthButton> {
             width: widget.width * _sizeModifier,
             height: widget.height * _sizeModifier,
             child: ElevatedButton(
-              onPressed: () {
-                tapEngine();
-              },
+              onPressed: (widget.isDisabled)
+                  ? null
+                  : () {
+                      tapEngine();
+                    },
               child: Stack(children: [
                 if (!widget.isLoading)
                   Text(

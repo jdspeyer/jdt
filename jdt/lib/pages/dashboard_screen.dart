@@ -1,12 +1,14 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jdt/providers/aws_auth_provider.dart';
 import 'package:jdt/ui/navbar/navigation.dart';
 import 'package:jdt/ui/navbar/side_navbar.dart';
 import 'package:jdt/ui/themes/theme_manager.dart';
 
 import '../ui/themes/module_theme.dart';
 
-class DashboardScreen extends StatefulWidget {
+class DashboardScreen extends ConsumerStatefulWidget {
   DashboardScreen({super.key});
 
   /// Path Location
@@ -34,10 +36,10 @@ class DashboardScreen extends StatefulWidget {
   );
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen>
+class _DashboardScreenState extends ConsumerState<DashboardScreen>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   final ModuleThemeManager _manager = ModuleThemeManager();
@@ -57,6 +59,8 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   @override
   Widget build(BuildContext context) {
+    final authAWSRepo = ref.read(authAWSRepositoryProvider);
+    authAWSRepo.user;
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: Padding(

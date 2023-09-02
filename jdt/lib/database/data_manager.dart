@@ -55,25 +55,15 @@ class DataManager {
     _userBox = await Hive.openBox<UserBox>(userBoxId);
 
     /// Has a user been created before?
-    // if (!_userBox.keys.contains(currentUserId)) {
-    _userBox.put(
-        currentUserId,
-        UserBox(
-          firstName: "New",
-          lastName: "User",
-          email: "NewUser@mail.com",
-          shareEmail: false,
-          phoneNumber: 11234567890,
-          sharePhoneNumber: false,
-          allowNotifications: false,
-          hasEditedEmail: false,
-          hasEditedFirstName: false,
-          hasEditedLastName: false,
-          hasEditedPhoneNumber: false,
-          hasEditedToggleSettings: false,
-          hasFinishedProfileSetup: false,
-        ));
-    // }
+    if (!_userBox.keys.contains(currentUserId)) {
+      _userBox.put(
+          currentUserId,
+          UserBox(
+            email: "NewUser@mail.com",
+            password: "password",
+            rememberMe: false,
+          ));
+    }
 
     _themeBox.put(
       'jdt_core_dark_theme',
@@ -215,6 +205,7 @@ class DataManager {
         firstName: "Error",
         lastName: "Error",
         email: "Error",
+        password: "Error",
         shareEmail: false,
         phoneNumber: 123,
         sharePhoneNumber: false,
@@ -225,43 +216,33 @@ class DataManager {
         hasEditedPhoneNumber: false,
         hasEditedToggleSettings: false,
         hasFinishedProfileSetup: false,
+        rememberMe: false,
       );
     }
 
     return JdtUser(
-      firstName: retrievedUser.firstName,
-      lastName: retrievedUser.lastName,
-      email: retrievedUser.email,
-      shareEmail: retrievedUser.shareEmail,
-      phoneNumber: retrievedUser.phoneNumber,
-      sharePhoneNumber: retrievedUser.sharePhoneNumber,
-      allowNotifications: retrievedUser.allowNotifications,
-      hasEditedEmail: retrievedUser.hasEditedEmail,
-      hasEditedFirstName: retrievedUser.hasEditedFirstName,
-      hasEditedLastName: retrievedUser.hasEditedLastName,
-      hasEditedPhoneNumber: retrievedUser.hasEditedPhoneNumber,
-      hasEditedToggleSettings: retrievedUser.hasEditedToggleSettings,
-      hasFinishedProfileSetup: retrievedUser.hasFinishedProfileSetup,
-    );
+        email: retrievedUser.email,
+        rememberMe: retrievedUser.rememberMe,
+        password: retrievedUser.password);
   }
 
   saveUserToStorage(JdtUser user) {
     _userBox.put(
         currentUserId,
         UserBox(
-          firstName: user.firstName,
-          lastName: user.lastName,
           email: user.email,
-          shareEmail: user.shareEmail,
-          phoneNumber: user.phoneNumber,
-          sharePhoneNumber: user.sharePhoneNumber,
-          allowNotifications: user.allowNotifications,
-          hasEditedEmail: user.hasEditedEmail,
-          hasEditedFirstName: user.hasEditedFirstName,
-          hasEditedLastName: user.hasEditedLastName,
-          hasEditedPhoneNumber: user.hasEditedPhoneNumber,
-          hasEditedToggleSettings: user.hasEditedToggleSettings,
-          hasFinishedProfileSetup: user.hasFinishedProfileSetup,
+          rememberMe: user.rememberMe,
+          password: user.password,
+        ));
+  }
+
+  updateRememberMe(JdtUser user) {
+    _userBox.put(
+        currentUserId,
+        UserBox(
+          email: user.email,
+          rememberMe: user.rememberMe,
+          password: user.password,
         ));
   }
 }

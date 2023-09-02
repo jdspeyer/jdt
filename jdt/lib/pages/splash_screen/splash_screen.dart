@@ -7,17 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jdt/amplifyconfiguration.dart';
 import 'package:jdt/database/data_manager.dart';
+import 'package:jdt/providers/aws_auth_provider.dart';
 import 'package:jdt/providers/user_provider.dart';
 import 'package:jdt/ui/navbar/navigation.dart';
 import 'package:jdt/pages/splash_screen/animated_logo.dart';
 import 'package:jdt/utils/app_window_manager.dart';
+import 'package:jdt/utils/status_enums.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 /* ------------------------------ SplashScreen ------------------------------ */
 /// The [SplashScreen] is where the assets and other loading processes occur while
 /// the user is allowed to play with our lil Hippo (he is so cute!).
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   SplashScreen({super.key});
 
   /// [beamLocation] for navigation to the page.
@@ -31,10 +33,10 @@ class SplashScreen extends StatefulWidget {
   static const String path = '/splashscreen';
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _SplashScreenState extends ConsumerState<SplashScreen>
     with TickerProviderStateMixin {
   /// The loading message displayed in title lettering.
   /// Used for macro tasks
@@ -56,7 +58,7 @@ class _SplashScreenState extends State<SplashScreen>
   /// The hippo animation
   final AnimatedLogo _logo = AnimatedLogo();
 
-  late FutureProvider<AuthUser?> currentUser;
+  late AuthUser? currentUser;
 
   /// The current loading process of the page.
   /// Range: 0-1
@@ -69,7 +71,8 @@ class _SplashScreenState extends State<SplashScreen>
     await _dataManagerLoading();
     await _assetLoading();
     await _windowManagerLoading();
-    bool authStatus = await _updateChecking();
+    bool authStatus = await _isAuthenticated();
+    print(authStatus);
 
     /// Loading is now completed! We can tell the user as such.
     setState(() {
@@ -102,34 +105,27 @@ class _SplashScreenState extends State<SplashScreen>
   /// Note: This is not going to contain the modules boxes... That will be done
   /// in a different step.
   _dataManagerLoading() async {
-    await _dataManager.validateBoxes();
     setState(() {
-      _loadingProgress = 0.25;
       _loadingMessage = "Validating storage...";
     });
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(Duration(milliseconds: 200));
+    await _dataManager.validateBoxes();
+    setState(() {
+      _loadingProgress = 0.10;
+    });
   }
 
   /* ------------------------------ _assetLoading ----------------------------- */
   /// Loads in large web assets that were not bundled with the application and other
   /// asset related loading processes.
   _assetLoading() async {
-    try {
-      setState(() {
-        _loadingMessage = "Loading assets...";
-      });
-
-      // Success
-      safePrint('Successfully configured');
-      setState(() {
-        _loadingProgress = 0.50;
-      });
-    } on Exception catch (e) {
-      _loadingProgress = 0.0;
-      _loadingMessage = "Loading Failed.";
-      // Failure
-      safePrint('Error configuring Amplify: $e');
-    }
+    setState(() {
+      _loadingMessage = "Loading assets...";
+    });
+    await Future.delayed(Duration(milliseconds: 200));
+    setState(() {
+      _loadingProgress = 0.15;
+    });
   }
 
   /* -------------------------- _windowManagerLoading ------------------------- */
@@ -137,10 +133,12 @@ class _SplashScreenState extends State<SplashScreen>
   /// set up.
   _windowManagerLoading() async {
     setState(() {
-      _loadingProgress = 0.75;
       _loadingMessage = "Sizing interfaces...";
     });
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 200));
+    setState(() {
+      _loadingProgress = 0.25;
+    });
   }
 
   /* ----------------------------- _updateChecking ---------------------------- */
@@ -148,35 +146,48 @@ class _SplashScreenState extends State<SplashScreen>
   /// is closer to its first release.
   ///
   /// TODO: Finish method and comment.
-  Future<bool> _updateChecking() async {
+  Future<bool> _isAuthenticated() async {
+    bool isAuthenticated = false;
     setState(() {
       _loadingMessage = "Checking authentication...";
+      _loadingProgress = 0.75;
     });
 
     /// 1.) Has the user logged in before and used the remember me feature? If so, this will attempt to log them in using those
     /// credentials.
+    print(_hasSavedCredentials());
     if (_hasSavedCredentials()) {
-      /// Try login
-    }
+      final authAWSRepo = ref.read(authAWSRepositoryProvider);
 
-    /// 2.) Either the saved credentials did not work, they are already logged in, or they dont have an account.
-    currentUser = authUserProvider;
+      LoginStatus status = await authAWSRepo.signIn(
+          _dataManager.getUserFromStorage().email,
+          _dataManager.getUserFromStorage().password);
+      _loadingMessage = "Account found...";
+      _loadingProgress = 0.8;
+      ref.refresh(authAWSRepositoryProvider);
+      try {
+        currentUser = await authAWSRepo.user;
+
+        /// 3.) The user is not signed in, return false
+        if (currentUser == null) {
+          isAuthenticated = false;
+        } else {
+          isAuthenticated = true;
+        }
+      } catch (e) {
+        safePrint("No login detected");
+      }
+    }
 
     setState(() {
       _loadingProgress = 1;
     });
-
-    /// 3.) The user is not signed in, return false
-    if (currentUser.argument == null) {
-      /// Has the user signed in previously? Do they have credentials saved on their machine?
-      return false;
-    }
-
-    return true;
+    return isAuthenticated;
   }
 
   bool _hasSavedCredentials() {
-    return false;
+    print(_dataManager.getUserFromStorage().email);
+    return _dataManager.getUserFromStorage().rememberMe;
   }
 
   /* -------------------------------- initState ------------------------------- */

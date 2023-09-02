@@ -1,8 +1,9 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-import 'package:jdt/pages/authentication_screens/create_screen.dart';
-import 'package:jdt/pages/authentication_screens/forgot_password_screen.dart';
-import 'package:jdt/pages/authentication_screens/signin_screen.dart';
+import 'package:jdt/pages/authentication_screens/create/create_screen.dart';
+import 'package:jdt/pages/authentication_screens/password/forgot_password_screen.dart';
+import 'package:jdt/pages/authentication_screens/password/forgot_password_verify_screen.dart';
+import 'package:jdt/pages/authentication_screens/signin/signin_screen.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -37,8 +38,12 @@ class _AuthScreenState extends State<AuthScreen> {
     _controller.animateToPage(page: 2);
   }
 
-  _navigationToVerifyEmail() {
-    _controller.jumpToPage(page: 3);
+  _navigationToVerifyEmailForPassword() {
+    _controller.animateToPage(page: 3);
+  }
+
+  _jumpToSignin() {
+    _controller.animateToPage(page: 2);
   }
 
   @override
@@ -46,15 +51,25 @@ class _AuthScreenState extends State<AuthScreen> {
     return Scaffold(
       body: LiquidSwipe(
         pages: [
+          /// Create account screen
           CreateScreen(
             signinCallback: _navigationToSignin,
           ),
+
+          /// Sign in screen
           SigninScreen(
             forgotPasswordCallback: _navigationToForgotPassword,
             createCallback: _navigationToCreate,
           ),
+
+          /// Forgot Password Screens
           ForgotPasswordScreen(
             signinCallback: _navigationToSignin,
+            verifyEmailForResetCallback: _navigationToVerifyEmailForPassword,
+          ),
+          ForgotPasswordVerifyScreen(
+            forgotPasswordCallback: _navigationToForgotPassword,
+            verifyEmailForPasswordResetCallback: _jumpToSignin,
           ),
         ],
         liquidController: _controller,

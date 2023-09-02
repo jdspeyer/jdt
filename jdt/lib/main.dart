@@ -10,19 +10,19 @@ import 'package:jdt/database/data_manager.dart';
 import 'package:jdt/database/themebox.dart';
 import 'package:jdt/database/userbox.dart';
 import 'package:jdt/pages/authentication_screens/auth_screen.dart';
-import 'package:jdt/pages/authentication_screens/signin_screen.dart';
+import 'package:jdt/pages/authentication_screens/signin/signin_screen.dart';
 import 'package:jdt/pages/dashboard_screen.dart';
 import 'package:jdt/pages/splash_screen/splash_screen.dart';
 import 'package:jdt/ui/themes/module_theme.dart';
 import 'package:jdt/ui/themes/theme_manager.dart';
 import 'package:jdt/utils/app_window_manager.dart';
+import 'package:jdt/utils/constants.dart';
 
 void main() async {
   await Hive.initFlutter();
 
   Hive.registerAdapter(ThemeBoxAdapter());
   Hive.registerAdapter(UserBoxAdapter());
-
   DataManager manager = DataManager();
   AppWindowManager window = AppWindowManager();
   await window.setup();

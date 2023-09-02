@@ -329,6 +329,8 @@ class ModuleTheme {
 
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
+          disabledBackgroundColor: accentColor.withOpacity(0.3),
+          disabledForegroundColor: buttonTextColor.withOpacity(0.3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(buttonBorderRadius)),
           ),

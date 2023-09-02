@@ -3,9 +3,9 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:jdt/pages/authentication_screens/auth_screen.dart';
-import 'package:jdt/pages/authentication_screens/create_screen.dart';
-import 'package:jdt/pages/authentication_screens/signin_screen.dart';
-import 'package:jdt/pages/authentication_screens/verify_email_screen.dart';
+import 'package:jdt/pages/authentication_screens/create/create_screen.dart';
+import 'package:jdt/pages/authentication_screens/signin/signin_screen.dart';
+import 'package:jdt/pages/authentication_screens/create/verify_email_screen.dart';
 import 'package:jdt/pages/dashboard_screen.dart';
 import 'package:jdt/pages/home_screen/home_screen.dart';
 import 'package:jdt/pages/setting_screen/settings_screen.dart';
