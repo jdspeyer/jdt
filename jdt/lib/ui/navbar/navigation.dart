@@ -3,34 +3,42 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:jdt/pages/authentication_screens/auth_screen.dart';
-import 'package:jdt/pages/authentication_screens/create/create_screen.dart';
-import 'package:jdt/pages/authentication_screens/signin/signin_screen.dart';
 import 'package:jdt/pages/authentication_screens/create/verify_email_screen.dart';
 import 'package:jdt/pages/dashboard_screen.dart';
 import 'package:jdt/pages/home_screen/home_screen.dart';
 import 'package:jdt/pages/setting_screen/settings_screen.dart';
-import '../../pages/splash_screen/splash_screen.dart';
+import 'package:jdt/pages/splash_screen/splash_screen.dart';
 
-/* ---------------------------- DashboardLocation --------------------------- */
-/// TODO: Write comment
+/* -------------------------------------------------------------------------- */
+/*                              DashboardLocation                             */
+/* -------------------------------------------------------------------------- */
+/// *TOP LEVEL PAGE
+/// Stores the location information for the [Beamer] package. Allows navigation to the
+/// [DashboardScreen].
 class DashboardLocation extends BeamLocation {
+  /* ------------------------------- buildPages ------------------------------- */
   @override
   List<BeamPage> buildPages(
       BuildContext context, RouteInformationSerializable state) {
     final pages = [
-      /// Default
       DashboardScreen.beamLocation,
     ];
     return pages;
   }
 
+  /* ------------------------------ pathPatterns ------------------------------ */
   @override
   List<Pattern> get pathPatterns => ["${DashboardScreen.path}/*"];
 }
 
-/* ------------------------------ HomeLocation ------------------------------ */
-/// TODO: Write Comment
+/* -------------------------------------------------------------------------- */
+/*                                HomeLocation                                */
+/* -------------------------------------------------------------------------- */
+/// *SUB PAGE
+/// Stores the location information for the [Beamer] package. Allows navigation to the
+/// [HomeScreen]. This is a subpage of [DashboardScreen].
 class HomeLocation extends BeamLocation {
+  /* ------------------------------- buildPages ------------------------------- */
   @override
   List<BeamPage> buildPages(
       BuildContext context, RouteInformationSerializable state) {
@@ -38,13 +46,19 @@ class HomeLocation extends BeamLocation {
     return pages;
   }
 
+  /* ------------------------------ pathPatterns ------------------------------ */
   @override
   List<Pattern> get pathPatterns => [HomeScreen.path];
 }
 
-/* ------------------------------ SettingsLocation ------------------------------ */
-/// TODO: Write Comment
+/* -------------------------------------------------------------------------- */
+/*                              SettingsLocation                              */
+/* -------------------------------------------------------------------------- */
+/// *SUB PAGE
+/// Stores the location information for the [Beamer] package. Allows navigation to the
+/// [SettingsScreen]. This is a subpage of [DashboardScreen].
 class SettingsLocation extends BeamLocation {
+  /* ------------------------------- buildPages ------------------------------- */
   @override
   List<BeamPage> buildPages(
       BuildContext context, RouteInformationSerializable state) {
@@ -54,13 +68,19 @@ class SettingsLocation extends BeamLocation {
     return pages;
   }
 
+  /* ------------------------------ pathPatterns ------------------------------ */
   @override
   List<Pattern> get pathPatterns => [SettingsScreen.path];
 }
 
-/* ----------------------------- SplashLocation ----------------------------- */
-/// TODO: Write comment
+/* -------------------------------------------------------------------------- */
+/*                               SplashLocation                               */
+/* -------------------------------------------------------------------------- */
+/// *TOP LEVEL PAGE
+/// Stores the location information for the [Beamer] package. Allows navigation to the
+/// [SplashScreen].
 class SplashLocation extends BeamLocation {
+  /* ------------------------------- buildPages ------------------------------- */
   @override
   List<BeamPage> buildPages(
       BuildContext context, RouteInformationSerializable state) {
@@ -73,13 +93,19 @@ class SplashLocation extends BeamLocation {
     return pages;
   }
 
+  /* ------------------------------ pathPatterns ------------------------------ */
   @override
   List<Pattern> get pathPatterns => [SplashScreen.path];
 }
 
-/* ----------------------------- AuthenticationLocation ----------------------------- */
-/// TODO: Write comment
+/* -------------------------------------------------------------------------- */
+/*                           AuthenticationLocation                           */
+/* -------------------------------------------------------------------------- */
+/// *TOP LEVEL PAGE
+/// Stores the location information for the [Beamer] package. Allows navigation to the
+/// [AuthScreen]. This contains: Sign in, Create Account, Forgot password, and reset password.
 class AuthenticationLocation extends BeamLocation {
+  /* ------------------------------- buildPages ------------------------------- */
   @override
   List<BeamPage> buildPages(
       BuildContext context, RouteInformationSerializable state) {
@@ -92,13 +118,19 @@ class AuthenticationLocation extends BeamLocation {
     return pages;
   }
 
+  /* ------------------------------ pathPatterns ------------------------------ */
   @override
   List<Pattern> get pathPatterns => [AuthScreen.path];
 }
 
-/* ----------------------------- AuthenticationLocation ----------------------------- */
-/// TODO: Write comment
+/* -------------------------------------------------------------------------- */
+/*                             VerifyEmailLocation                            */
+/* -------------------------------------------------------------------------- */
+/// *TOP LEVEL PAGE
+/// Stores the location information for the [Beamer] package. Allows navigation to the
+/// [VerifyEmailScreen].
 class VerifyEmailLocation extends BeamLocation {
+  /* ------------------------------- buildPages ------------------------------- */
   @override
   List<BeamPage> buildPages(
       BuildContext context, RouteInformationSerializable state) {
@@ -111,30 +143,7 @@ class VerifyEmailLocation extends BeamLocation {
     return pages;
   }
 
+  /* ------------------------------ pathPatterns ------------------------------ */
   @override
   List<Pattern> get pathPatterns => [VerifyEmailScreen.path];
-}
-
-/* ---------------------------- NoTransitionPage ---------------------------- */
-/// Overrides the default behavoir of the [BeamPage] to no longer show a swipe
-/// animation. Allows for seamless and quick navigation.
-class NoTransitionPage extends BeamPage {
-  final Widget child;
-  NoTransitionPage({
-    required LocalKey key,
-    required this.child,
-    required this.isEmbelished,
-    bool keepQueryOnPop = false,
-  }) : super(key: key, child: child, keepQueryOnPop: keepQueryOnPop);
-
-  /// Should the transition be embellished and made beautiful?
-  bool isEmbelished;
-  @override
-  Route createRoute(BuildContext context) {
-    print("started");
-    return PageRouteBuilder(
-      settings: this,
-      pageBuilder: (context, animation, secondaryAnimation) => child,
-    );
-  }
 }
