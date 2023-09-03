@@ -2,6 +2,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:jdt/ui/icons/jdt_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:jdt/utils/jdt_debugger.dart';
+import 'package:jdt/utils/status_enums.dart';
 import 'package:lottie/lottie.dart';
 
 /* ------------------------------- TextFieldIcon ------------------------------ */
@@ -38,15 +40,12 @@ class _GenericIconState extends State<TextFieldIcon>
   /// The [AnimationController] for keyframes and general animation playback
   late AnimationController _controller;
 
-  /// The [AnimationController] for controlling size related animation
-  late AnimationController _sizeController;
-
-  /// The default value of the [_sizeController]. This is
-  /// multiplied by the width and height parameters to calculate the correct size.
+  /// The default value multiplied by the width to determin inner icon size.
   ///
   /// 1 means default size. (x*1 = x)
   double _sizeConstraint = 1;
 
+  /// Is the user currently typing into the field that this icon is in?
   bool _isTyping = false;
 
   /* --------------------------- typingStartAnimation -------------------------- */
@@ -85,9 +84,9 @@ class _GenericIconState extends State<TextFieldIcon>
         try {
           widget.tapCallback!();
         } catch (e) {
-          if (kDebugMode) {
-            print("Error occured.");
-          }
+          JdtDebugger.log(
+              "Text field icon did not have a tap callback defined.",
+              status: JdtDebugStatus.warning);
         }
       });
     }

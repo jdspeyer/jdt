@@ -1,17 +1,14 @@
 // ignore_for_file: deprecated_member_use, use_build_context_synchronously
-
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jdt/amplifyconfiguration.dart';
 import 'package:jdt/database/data_manager.dart';
 import 'package:jdt/providers/aws_auth_provider.dart';
-import 'package:jdt/providers/user_provider.dart';
 import 'package:jdt/ui/navbar/navigation.dart';
 import 'package:jdt/pages/splash_screen/animated_logo.dart';
 import 'package:jdt/utils/app_window_manager.dart';
+import 'package:jdt/utils/jdt_debugger.dart';
 import 'package:jdt/utils/status_enums.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -72,7 +69,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     await _assetLoading();
     await _windowManagerLoading();
     bool authStatus = await _isAuthenticated();
-    print(authStatus);
+    JdtDebugger.log("User is authenticated? [$authStatus]",
+        status: JdtDebugStatus.info);
 
     /// Loading is now completed! We can tell the user as such.
     setState(() {
@@ -155,8 +153,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     /// 1.) Has the user logged in before and used the remember me feature? If so, this will attempt to log them in using those
     /// credentials.
-    print(_hasSavedCredentials());
+
     if (_hasSavedCredentials()) {
+      JdtDebugger.log("Has the user saved their credentials to storage? [true]",
+          status: JdtDebugStatus.info);
       final authAWSRepo = ref.read(authAWSRepositoryProvider);
 
       LoginStatus status = await authAWSRepo.signIn(
@@ -186,7 +186,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 
   bool _hasSavedCredentials() {
-    print(_dataManager.getUserFromStorage().email);
+    JdtDebugger.log(
+        "Fetched the following email from storage: ${_dataManager.getUserFromStorage().email}",
+        status: JdtDebugStatus.info);
     return _dataManager.getUserFromStorage().rememberMe;
   }
 

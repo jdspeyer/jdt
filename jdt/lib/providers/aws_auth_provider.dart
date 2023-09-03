@@ -1,8 +1,7 @@
-import 'dart:io';
-
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jdt/utils/jdt_debugger.dart';
 import 'package:jdt/utils/status_enums.dart';
 
 final authAWSRepositoryProvider =
@@ -19,10 +18,9 @@ class AWSAuthRepository {
   Future<AuthUser?> get user async {
     try {
       final awsUser = await Amplify.Auth.getCurrentUser();
-      print(awsUser.username);
       return awsUser;
     } catch (e) {
-      print(e);
+      JdtDebugger.log("Could not fetch user: $e", status: JdtDebugStatus.error);
       return null;
     }
   }
@@ -54,12 +52,16 @@ class AWSAuthRepository {
   Future<LoginStatus> signIn(String email, String password) async {
     try {
       await logout();
-    } catch (e) {}
+    } catch (e) {
+      JdtDebugger.log("Attempted to logout user before sign in failed: $e",
+          status: JdtDebugStatus.warning);
+    }
     try {
       SignInResult result =
           await Amplify.Auth.signIn(username: email, password: password);
 
-      print(result);
+      JdtDebugger.log("Result of sign in: $result",
+          status: JdtDebugStatus.info);
       if (result.nextStep.signInStep == AuthSignInStep.confirmSignUp) {
         _cachedUsername = email;
         _cachedPassword = password;
@@ -72,7 +74,6 @@ class AWSAuthRepository {
 
       return LoginStatus.success;
     } catch (e) {
-      print(e);
       if (e is UserNotFoundException) {
         return LoginStatus.accountDoesNotExistError;
       }
@@ -84,7 +85,8 @@ class AWSAuthRepository {
       if (e is NotAuthorizedServiceException) {
         return LoginStatus.wrongCredentialsError;
       }
-      print(e);
+      JdtDebugger.log("Unchecked error occured on signIn: $e",
+          status: JdtDebugStatus.error);
       return LoginStatus.unknownError;
     }
   }
@@ -112,30 +114,22 @@ class AWSAuthRepository {
   Future<void> logout() async {
     try {
       await Amplify.Auth.signOut();
-    } on Exception {
-      rethrow;
-    }
-  }
-
-  Future<void> fetchCurrentUserAttributes() async {
-    try {
-      final result = await Amplify.Auth.fetchUserAttributes();
-      for (final element in result) {
-        safePrint('key: ${element.userAttributeKey}; value: ${element.value}');
-      }
-    } on AuthException catch (e) {
-      safePrint('Error fetching user attributes: ${e.message}');
+    } catch (e) {
+      JdtDebugger.log("Failure to log user out: $e",
+          status: JdtDebugStatus.warning);
     }
   }
 
   Future<VerifyStatus> resetPassword(String username) async {
     try {
-      final result = await Amplify.Auth.resetPassword(
+      await Amplify.Auth.resetPassword(
         username: username,
       );
       _cachedUsername = username;
       return VerifyStatus.success;
-    } on Exception catch (e) {
+    } catch (e) {
+      JdtDebugger.log("Unchecked error occured on resetPassword: $e",
+          status: JdtDebugStatus.warning);
       return VerifyStatus.incorrect;
     }
   }
@@ -150,7 +144,8 @@ class AWSAuthRepository {
         newPassword: newPassword,
         confirmationCode: confirmationCode,
       );
-      safePrint('Password reset complete: ${result.isPasswordReset}');
+      JdtDebugger.log("Password reset complete: ${result.isPasswordReset}",
+          status: JdtDebugStatus.info);
       return ResetPasswordStatus.success;
     } on Exception catch (e) {
       if (e is CodeMismatchException) {
@@ -162,7 +157,8 @@ class AWSAuthRepository {
       if (e is LimitExceededException) {
         return ResetPasswordStatus.limitReachedError;
       }
-      print(e);
+      JdtDebugger.log("Unchecked error occured on confirmResetPassword: $e",
+          status: JdtDebugStatus.warning);
       return ResetPasswordStatus.unknownError;
     }
   }
